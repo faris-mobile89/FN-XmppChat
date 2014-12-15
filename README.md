@@ -4,4 +4,4 @@ FN-XmppChat
 An XMPP Client
 
 
-![Alt text](http://static.cargurus.com/images/site/2008/01/04/06/39/2008_mazda_mazda6-pic-20260.jpeg?raw=true "Optional Title")
+![Alt text](snapshots/device-2014-12-15-174240.png?raw=true "Optional Title")
