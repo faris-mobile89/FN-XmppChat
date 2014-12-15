@@ -3,5 +3,6 @@ FN-XmppChat
 
 An XMPP Client
 
-
-![Alt text](snapshots/device-2014-12-15-174240.png?raw=true "Optional Title")
+<div align="center">
+        <img width="45%" src="snapshots/device-2014-12-15-174240.png" alt="About screen" title="About screen"</img>
+</div>
