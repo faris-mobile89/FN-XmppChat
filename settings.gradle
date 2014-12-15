@@ -1,0 +1,8 @@
+include ':libraryMessage', 'emojicon-master'
+include ':MemorizingActivity'
+include ':EmptyLayout'
+include ':librarySlidMenu'
+include ':PhotoView'
+include ':AndroidBootstrap'
+include ':libDialog-Alert'
+include ':FN-Chat'

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_temp"
+    android:id="@+id/relative_layout"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/bottom_write_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/message_bar" >
+
+        <Button
+            android:id="@+id/emojoBtn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/ic_smile"
+            android:onClick="showEmoji" />
+
+        <github.ankushsachdeva.emojicon.EmojiconEditText
+            android:id="@+id/emojiconEditText"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_margin="5sp"
+            android:layout_weight="1"
+            android:background="@drawable/message_field"
+            android:hint="Write here"
+            android:maxHeight="100dp"
+            android:padding="5sp"
+            android:paddingLeft="5sp"
+            emojicon:emojiconSize="28sp"
+            android:textColor="@color/textFieldColor" />
+
+        <Button
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_margin="5sp"
+            android:background="@drawable/ic_send_message"
+            android:onClick="sendMessage"
+            android:paddingBottom="5sp"
+            android:paddingLeft="15sp"
+            android:paddingRight="15sp"
+            android:paddingTop="5sp"
+            android:textColor="#FFF" />
+    </LinearLayout>
+
+    <com.fn.reunion.app.ui.custom.InsertionListView
+        android:id="@+id/listView1"
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_above="@id/bottom_write_bar"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/transparent"
+        android:cacheColorHint="#00000000"
+        android:divider="#00000000"
+        android:listSelector="#00000000" >
+    </com.fn.reunion.app.ui.custom.InsertionListView>
+
+</RelativeLayout>

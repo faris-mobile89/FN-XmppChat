@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/AndroidBootstrap/AndroidBootstrap.iml" filepath="$PROJECT_DIR$/AndroidBootstrap/AndroidBootstrap.iml" />
+      <module fileurl="file://$PROJECT_DIR$/EmptyLayout/EmptyLayout.iml" filepath="$PROJECT_DIR$/EmptyLayout/EmptyLayout.iml" />
+      <module fileurl="file://$PROJECT_DIR$/FN-Chat/FN-Chat.iml" filepath="$PROJECT_DIR$/FN-Chat/FN-Chat.iml" />
+      <module fileurl="file://$PROJECT_DIR$/FN-XmppChat.iml" filepath="$PROJECT_DIR$/FN-XmppChat.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MemorizingActivity/MemorizingActivity.iml" filepath="$PROJECT_DIR$/MemorizingActivity/MemorizingActivity.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PhotoView/PhotoView.iml" filepath="$PROJECT_DIR$/PhotoView/PhotoView.iml" />
+      <module fileurl="file://$PROJECT_DIR$/emojicon-master/emojicon-master.iml" filepath="$PROJECT_DIR$/emojicon-master/emojicon-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libDialog-Alert/libDialog-Alert.iml" filepath="$PROJECT_DIR$/libDialog-Alert/libDialog-Alert.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraryMessage/libraryMessage.iml" filepath="$PROJECT_DIR$/libraryMessage/libraryMessage.iml" />
+      <module fileurl="file://$PROJECT_DIR$/librarySlidMenu/librarySlidMenu.iml" filepath="$PROJECT_DIR$/librarySlidMenu/librarySlidMenu.iml" />
+    </modules>
+  </component>
+</project>
+

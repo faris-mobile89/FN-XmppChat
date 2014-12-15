@@ -1,0 +1,166 @@
+package com.fn.reunion.app.utility;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.Roster;
+import org.jivesoftware.smack.packet.Presence;
+
+
+import android.annotation.SuppressLint;
+import android.app.ActivityManager;
+import android.app.Dialog;
+import android.content.Context;
+import android.database.Cursor;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+
+import com.fn.reunion.app.R;
+import com.fn.reunion.app.xmpp.Constants;
+import com.fn.reunion.app.xmpp.XMPPLogic;
+
+/**
+ * Utility is a just an ordinary class to have some Utility methods
+ * 
+ * @author faris.it.cs@gmail.com
+ * 
+ */
+
+public class Utility {
+
+	public static void addEntry(String userName) {
+		try {
+			Roster.setDefaultSubscriptionMode(Roster.SubscriptionMode.manual);
+			String jid = userName + Constants.ADVANTLPC__SMACK;
+			Connection  connection = XMPPLogic.getInstance().getConnection();
+			connection.getRoster().createEntry(jid, userName, null);
+			Presence pres = new Presence(Presence.Type.subscribe);
+			pres.setFrom(jid);
+			connection.sendPacket(pres);
+
+		} catch (Exception e) {
+			Log.e("tag", "unable to add contact: ", e);
+		}
+	}
+		
+		@SuppressLint("SimpleDateFormat")
+		public static String getCurrentTime(){
+		/*	
+			"yyyy.MM.dd G 'at' HH:mm:ss z" ---- 2001.07.04 AD at 12:08:56 PDT
+			"hh 'o''clock' a, zzzz" ----------- 12 o'clock PM, Pacific Daylight Time
+			"EEE, d MMM yyyy HH:mm:ss Z"------- Wed, 4 Jul 2001 12:08:56 -0700
+			"yyyy-MM-dd'T'HH:mm:ss.SSSZ"------- 2001-07-04T12:08:56.235-0700
+			"yyMMddHHmmssZ"-------------------- 010704120856-0700
+			"K:mm a, z" ----------------------- 0:08 PM, PDT
+			"h:mm a" -------------------------- 12:08 PM
+			"EEE, MMM d, ''yy" ---------------- Wed, Jul 4, '01
+             */			
+			//yyyyMMdd_HHmmss
+			SimpleDateFormat dFormat = new SimpleDateFormat("h:mm a");
+			return  dFormat.format(new Date());
+		}
+		
+		
+		public static String getRealPathFromURI(Context context , Uri contentURI) {
+		    String result;
+		    Cursor cursor = context.getContentResolver().query(contentURI, null, null, null, null);
+		    if (cursor == null) { // Source is Dropbox or other similar local file path
+		        result = contentURI.getPath();
+		    } else { 
+		        cursor.moveToFirst(); 
+		        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA); 
+		        result = cursor.getString(idx);
+		        cursor.close();
+		    }
+		    return result;
+		}
+		/**
+		 * 
+		 * @param context
+		 * @return  true if the app in the foreground
+		 */
+		
+		public static boolean isRunningInForeground(Context context) {
+			//<uses-permission android:name="android.permission.GET_TASKS"/>
+		    ActivityManager manager = 
+		         (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		    List<ActivityManager.RunningTaskInfo> tasks = manager.getRunningTasks(1);
+		    if (tasks.isEmpty()) {
+		        return false;
+		    }
+		    String topActivityName = tasks.get(0).topActivity.getPackageName();
+		    return topActivityName.equalsIgnoreCase(context.getPackageName());
+		}
+		
+		/**
+		 *Check Internet connectivity by ping
+		 */
+		public Boolean isOnline() {
+		    Process p1 = null;
+			try {
+		        p1 = java.lang.Runtime.getRuntime().exec("ping -c 1 www.google.com");
+		        int returnVal = p1.waitFor();
+		        boolean reachable = (returnVal == 0);
+		        if (reachable) {
+
+		            System.out.println("Internet access");
+		            return reachable;
+		        } else {
+
+		            System.out.println("No Internet access");
+		        }
+
+		    } catch (Exception e) {
+
+		        e.printStackTrace();
+		    } finally {
+		        p1.destroy();
+		    }
+		    return false;
+		}
+		
+		
+		public static void showImage(Context mContext, ImageView imageView) {
+		    PhotoViewAttacher mAttacher;
+	        ImageView tempImageView = imageView;
+
+	        Dialog imageDialog = new Dialog(mContext,android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+	        imageDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.BLACK));
+	        imageDialog.setCancelable(true);
+	        LayoutInflater inflater =
+	                (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	        
+	        imageDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+	        
+	        View view = inflater.inflate(R.layout.custom_fullimage_dialog,null);
+
+	        ImageView image = (ImageView) view.findViewById(R.id.fullimage);
+	        image.setImageDrawable(tempImageView.getDrawable());
+	        imageDialog.addContentView(view, new RelativeLayout.LayoutParams(
+	                ViewGroup.LayoutParams.MATCH_PARENT, 
+	                ViewGroup.LayoutParams.MATCH_PARENT));
+	        
+		    mAttacher = new PhotoViewAttacher(image);
+		    mAttacher.canZoom();
+	        
+	      /*  imageDialog.setPositiveButton(mContext.getResources().getString(R.string.ok_button), new DialogInterface.OnClickListener(){
+	            public void onClick(DialogInterface dialog, int which) {
+	                dialog.dismiss();
+	            }
+	        });*/
+
+
+	        imageDialog.show();     
+	    }
+}

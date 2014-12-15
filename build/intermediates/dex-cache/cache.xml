@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/com.getbase/floatingactionbutton/1.3.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="435a97b8fe906a305176ab0a76e324734e76f711">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-679d34826eef4476f1161ce4a6400bd8267b679c.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/com.android.support/support-v13/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2c2071dcaf7a008c3b01a6381a33be55396bab09">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-893c9e2e541b59202355eae1f5f904bfdb5de6ca.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/librarySlidMenu/unspecified/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="eb2213473081a1793028c40f01c0df4506f9b330">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-81eb85f884b7748318eaed186ab4952bc9d77fa5.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/com.android.support/support-v13/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0dcc55e70f7ebf7238fe2ec53f662eb378ab2668">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-a1dd2d936de6f2fb90f6bd70c7ca43561d8a745c.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-8bae4a137a763756198d76ddf8bab1956874bfa9.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/emojicon-master/unspecified/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="d762b746f93f57b29f8b1479a63d20aa3f026336">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-897d6cba256e3850c5321a0c95c5034e3790ac68.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/libs/Parse-1.4.3.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="8daf146aea8cd5245bb90f802f2cd4b8dd855eca">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/Parse-1.4.3-2d023e521b2bba56d1cf2384c26baf66fda3db9f.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/MemorizingActivity/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="b6fa31460f282ab31f5c4bc12c6ea9205d128cc6">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-90dc9fc252b40f673ecc01b38ff04d1b2b21c28e.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/libs/nineoldandroids-2.4.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="59f19e43354d32de831379c23ce03bb259a4c2b7">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/nineoldandroids-2.4.0-ce0c75a678c1f149f96fd2cee120d7b5bbdb7f69.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/libs/universal-image-loader-1.9.3.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="a85588bec3e2c4584d593d3f15df1677321bca72">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/universal-image-loader-1.9.3-80f02c2be5e0c52224206e139451bf1a48b09f98.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/com.github.theDazzler/droidicon/0.1.4/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="bfec4828b83b49229e181c04b5353c65c76f2827">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-94f3460525bf5afa818d951420aa3df1ebdb576c.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/libs/asmack-jse-buddycloud-2010.12.11.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="dcc95a6390689f2b03ca2f9b7df9f65ccfc24893">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/asmack-jse-buddycloud-2010.12.11-431297cf320b9074326d1d0a142f2641e03dd55f.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/MemorizingActivity/unspecified/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="24972a0c055ece2c0a4cfcbbb04258493b6005b7">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-90dc9fc252b40f673ecc01b38ff04d1b2b21c28e.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/libs/Parse-1.4.3.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="8daf146aea8cd5245bb90f802f2cd4b8dd855eca">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/Parse-1.4.3-2d023e521b2bba56d1cf2384c26baf66fda3db9f.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/libraryMessage/unspecified/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="bf82d1617967dfbc4efb957f71b7545748030f9a">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-15894b5d4be324199f02b12ea28a20c5fe614853.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/libs/Parse-1.4.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="8daf146aea8cd5245bb90f802f2cd4b8dd855eca">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/Parse-1.4.3-2d023e521b2bba56d1cf2384c26baf66fda3db9f.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/libs/universal-image-loader-1.9.3.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="a85588bec3e2c4584d593d3f15df1677321bca72">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/universal-image-loader-1.9.3-80f02c2be5e0c52224206e139451bf1a48b09f98.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/MemorizingActivity/unspecified/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="836da8db16721ea489aaa9f2b1f79e76d2849fc8">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-90dc9fc252b40f673ecc01b38ff04d1b2b21c28e.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/AndroidBootstrap/unspecified/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="54ff0371276795ca6c87cb68aa9594b7e080d688">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-b0bfc59e60f8a84e2d430a7c76db3427da293243.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/emojicon-master/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="acd9d61ad7761d95033fbf7a7cf90f209851652f">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-897d6cba256e3850c5321a0c95c5034e3790ac68.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/emojicon-master/unspecified/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="87f5f45b1304cafbc15c0273d9ea9ba96e93e2a3">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-897d6cba256e3850c5321a0c95c5034e3790ac68.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/libraryMessage/unspecified/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="951f8888ce19c8aa5dd533e5a09ce24fcd7e9d49">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-15894b5d4be324199f02b12ea28a20c5fe614853.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/libDialog-Alert/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="b272ba73969bcede1e3a0d6f1c2a5e8953ba5ca1">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-f4f59659138822c772ca0e2440d1659b5020899c.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/libraryMessage/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="3bdfb205378e9888332ec33c710cf6a3b52aa0f7">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-15894b5d4be324199f02b12ea28a20c5fe614853.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/libDialog-Alert/unspecified/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="503667b07ace3a8a0b1fe014d883bcda7c139ff3">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-f4f59659138822c772ca0e2440d1659b5020899c.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-20b989cf4e30b437e0b818c53f38b023f9697172.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/PhotoView/unspecified/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="974b49cbb458d59a237d7937d1ccab6b9a127179">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-e430150e1502fc2edd6dcb3dffb3d8e680192258.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/libs/asmack-jse-buddycloud-2010.12.11.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="dcc95a6390689f2b03ca2f9b7df9f65ccfc24893">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/asmack-jse-buddycloud-2010.12.11-431297cf320b9074326d1d0a142f2641e03dd55f.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/de.keyboardsurfer.android.widget/crouton/1.8.5/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="b81c788c5f175f94ddaac2f65e5d1726371e0963">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-93f246c33736e76bba821a9e2132d3e845a4e7f7.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/libs/universal-image-loader-1.9.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a85588bec3e2c4584d593d3f15df1677321bca72">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/universal-image-loader-1.9.3-80f02c2be5e0c52224206e139451bf1a48b09f98.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/EmptyLayout/unspecified/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="6451a48537f8b2c486b6ee341fc3c7a0efe68958">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-51a7d9d4a1f95977b8b1436380d448756850a03c.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/libs/asmack-jse-buddycloud-2010.12.11.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="dcc95a6390689f2b03ca2f9b7df9f65ccfc24893">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/asmack-jse-buddycloud-2010.12.11-431297cf320b9074326d1d0a142f2641e03dd55f.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/AndroidBootstrap/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a613b8561e9d9dd15e413ae4f875708c6e95d21d">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-b0bfc59e60f8a84e2d430a7c76db3427da293243.jar" />
+    </item>
+    <item
+        jar="/Volumes/Mena Itech/programs/programs/adt-bundle-mac-x86_64-20130729/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-f98577a7bde062d75004aad8ecc79b17a62e19cb.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/EmptyLayout/unspecified/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="2366a7df8759e9b82063f9fc40099f0a7d8b6588">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-51a7d9d4a1f95977b8b1436380d448756850a03c.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/libDialog-Alert/unspecified/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="9c6b3ae31f4d6454f869119ce6ce93b6ce9fafce">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-f4f59659138822c772ca0e2440d1659b5020899c.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/AndroidBootstrap/unspecified/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="b60d54028af618b2f92f84dd14d98447b4615cc9">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-b0bfc59e60f8a84e2d430a7c76db3427da293243.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/librarySlidMenu/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="f776129921befb699dc5e90eaa7b97d783d8e2ed">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-81eb85f884b7748318eaed186ab4952bc9d77fa5.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/PhotoView/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="59865c13e70ad4045339f0a4958c43643f075a41">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-e430150e1502fc2edd6dcb3dffb3d8e680192258.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/EmptyLayout/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="ff2a92b8dbcd508538c66f3b54e8375fdc23db5e">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-51a7d9d4a1f95977b8b1436380d448756850a03c.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/librarySlidMenu/unspecified/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="ac4fd4892f6a77697ac4f04737eecc1d7eea82cc">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-81eb85f884b7748318eaed186ab4952bc9d77fa5.jar" />
+    </item>
+    <item
+        jar="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/exploded-aar/FN-XmppChat/PhotoView/unspecified/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="1bfa70eda7c57878fc1389fac4e5554d1628e147">
+        <dex dex="/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/FN-Chat/build/intermediates/pre-dexed/debug/classes-e430150e1502fc2edd6dcb3dffb3d8e680192258.jar" />
+    </item>
+
+</items>

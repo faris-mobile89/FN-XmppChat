@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/balloon_bg" >
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:padding="10dp" >
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/editText2"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/edittext_top_bg"
+                android:drawableLeft="@drawable/user"
+                android:hint="First name"
+                android:inputType="textPersonName"
+                android:padding="10dp"
+                android:textColorHint="#bbbbbb" />
+
+            <EditText
+                android:id="@+id/edittext_searchKeyword"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/edittext_default_bg"
+                android:drawableLeft="@drawable/user"
+                android:hint="Second name"
+                android:inputType="textPersonName"
+                android:padding="10dp"
+                android:textColorHint="#bbbbbb" />
+
+            <EditText
+                android:id="@+id/editFamilyName"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/edittext_default_bg"
+                android:drawableLeft="@drawable/user"
+                android:hint="Family name"
+                android:inputType="textPersonName"
+                android:padding="10dp"
+                android:textColorHint="#bbbbbb" />
+
+            <EditText
+                android:id="@+id/editText4"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/edittext_default_bg"
+                android:drawableLeft="@drawable/email"
+                android:hint="E-mail"
+                android:inputType="textEmailAddress"
+                android:padding="10dp"
+                android:textColorHint="#bbbbbb" />
+
+            <EditText
+                android:id="@+id/editPhone"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/edittext_bottom_bg"
+                android:drawableLeft="@drawable/password"
+                android:hint="Phone"
+                android:inputType="phone"
+                android:padding="10dp"
+                android:textColorHint="#bbbbbb" />
+
+            <Button
+                android:id="@+id/btnRegister"
+                style="@style/blue_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:onClick="registerUser"
+                android:padding="10dp"
+                android:text="Sign Up" />
+        </LinearLayout>
+    </FrameLayout>
+
+</RelativeLayout>

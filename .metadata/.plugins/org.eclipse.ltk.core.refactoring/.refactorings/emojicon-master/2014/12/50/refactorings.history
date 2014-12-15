@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy 2 packages to &apos;FN-Chat/src&apos;&#x0A;- Original project: &apos;emojicon-master&apos;&#x0A;- Destination element: &apos;FN-Chat/src&apos;&#x0A;- Original elements:&#x0A;     emojicon-master/src/github.ankushsachdeva.emojicon.emoji&#x0A;     emojicon-master/src/github.ankushsachdeva.emojicon" description="Copy packages" destination="=FN-Chat/src" element1="/src&lt;github.ankushsachdeva.emojicon.emoji" element2="/src&lt;github.ankushsachdeva.emojicon" flags="589830" fragments="2" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyPackages" stamp="1418298197998" version="1.0"/>
+</session>

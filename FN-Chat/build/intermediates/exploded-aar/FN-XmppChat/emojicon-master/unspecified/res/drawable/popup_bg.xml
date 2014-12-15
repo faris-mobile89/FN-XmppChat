@@ -1,0 +1,8 @@
+<shape 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape ="rectangle">
+    <solid 
+        android:color="#000"
+        />
+    
+</shape><!-- From: file:/Users/menaitech/Desktop/Faris-menaitech/FN-XmppChat/emojicon-master/res/drawable/popup_bg.xml -->

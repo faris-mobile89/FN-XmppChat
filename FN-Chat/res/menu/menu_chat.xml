@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_attach_file"
+        android:icon="@drawable/send_file_32"
+        android:showAsAction="collapseActionView|always"
+        android:title="@string/attach_file"/>
+    <item
+        android:id="@+id/action_attach_image"
+        android:icon="@drawable/send_image_32"
+        android:showAsAction="collapseActionView|always"
+        android:title="@string/attach_image"/>
+    <item
+        android:id="@+id/userInfo"
+        android:title="@string/menu_about_user"/>
+    <item
+        android:id="@+id/clearChat"
+        android:title="@string/clear_chat"/>
+
+</menu>
