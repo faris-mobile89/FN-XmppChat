@@ -55,7 +55,8 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.poppyview.PoppyViewHelper;
 
 public class BuddiesListPage extends Fragment {
-	ListView list;
+
+    ListView list;
 	Connection connection;
 	private static XmppManager xmppManager;
 	private static ArrayList<FriendTempData> friends;
@@ -255,6 +256,7 @@ public class BuddiesListPage extends Fragment {
             e.printStackTrace();
         }
         catch (Exception m){
+
         }
 
     }
@@ -400,7 +402,7 @@ public class BuddiesListPage extends Fragment {
 		public void removeObject(int index){
 			roster.remove(index);
 			this.notifyDataSetChanged();
-		}
+		}//
 
 		@Override
 		public FriendTempData getItem(int index) {
