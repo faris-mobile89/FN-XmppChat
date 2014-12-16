@@ -9,8 +9,6 @@
       <module fileurl="file://$PROJECT_DIR$/MemorizingActivity/MemorizingActivity.iml" filepath="$PROJECT_DIR$/MemorizingActivity/MemorizingActivity.iml" />
       <module fileurl="file://$PROJECT_DIR$/PhotoView/PhotoView.iml" filepath="$PROJECT_DIR$/PhotoView/PhotoView.iml" />
       <module fileurl="file://$PROJECT_DIR$/emojicon-master/emojicon-master.iml" filepath="$PROJECT_DIR$/emojicon-master/emojicon-master.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libDialog-Alert/libDialog-Alert.iml" filepath="$PROJECT_DIR$/libDialog-Alert/libDialog-Alert.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libraryMessage/libraryMessage.iml" filepath="$PROJECT_DIR$/libraryMessage/libraryMessage.iml" />
       <module fileurl="file://$PROJECT_DIR$/librarySlidMenu/librarySlidMenu.iml" filepath="$PROJECT_DIR$/librarySlidMenu/librarySlidMenu.iml" />
     </modules>
   </component>

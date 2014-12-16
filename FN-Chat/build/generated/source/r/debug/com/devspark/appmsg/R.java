@@ -8,11 +8,11 @@ package com.devspark.appmsg;
 
 public final class R {
 	public static final class color {
-		public static final int alert = 0x7f070005;
-		public static final int confirm = 0x7f07005b;
-		public static final int info = 0x7f07006d;
+		public static final int alert = 0x7f08000b;
+		public static final int confirm = 0x7f08006d;
+		public static final int info = 0x7f080087;
 	}
 	public static final class layout {
-		public static final int app_msg = 0x7f030002;
+		public static final int app_msg = 0x7f030019;
 	}
 }

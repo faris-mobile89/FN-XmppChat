@@ -7,14 +7,14 @@ dependencies {
     compile 'com.getbase:floatingactionbutton:1.3.0'
     compile 'de.keyboardsurfer.android.widget:crouton:1.8.5@aar'
     compile 'com.github.theDazzler:droidicon:0.1.4@aar'
+    compile 'cn.pedant.sweetalert:library:1.3'
+    compile 'com.github.johnkil.android-appmsg:appmsg:1.2.0'
 }
 
 
 dependencies {
     compile project(':AndroidBootstrap')
     compile project(':EmptyLayout')
-    compile project(':libDialog-Alert')
-    compile project(':libraryMessage')
     compile project(':librarySlidMenu')
     compile project(':MemorizingActivity')
     compile project(':PhotoView')

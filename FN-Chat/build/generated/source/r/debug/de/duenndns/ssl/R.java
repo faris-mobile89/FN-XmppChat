@@ -8,15 +8,15 @@ package de.duenndns.ssl;
 
 public final class R {
 	public static final class string {
-		public static final int mtm_accept_cert = 0x7f0a0014;
-		public static final int mtm_accept_servername = 0x7f0a0015;
-		public static final int mtm_cert_details = 0x7f0a0016;
-		public static final int mtm_connect_anyway = 0x7f0a0017;
-		public static final int mtm_decision_abort = 0x7f0a0018;
-		public static final int mtm_decision_always = 0x7f0a0019;
-		public static final int mtm_decision_once = 0x7f0a001a;
-		public static final int mtm_hostname_mismatch = 0x7f0a001b;
-		public static final int mtm_notification = 0x7f0a001c;
-		public static final int mtm_trust_anchor = 0x7f0a001d;
+		public static final int mtm_accept_cert = 0x7f0c0023;
+		public static final int mtm_accept_servername = 0x7f0c0024;
+		public static final int mtm_cert_details = 0x7f0c0025;
+		public static final int mtm_connect_anyway = 0x7f0c0026;
+		public static final int mtm_decision_abort = 0x7f0c0027;
+		public static final int mtm_decision_always = 0x7f0c0028;
+		public static final int mtm_decision_once = 0x7f0c0029;
+		public static final int mtm_hostname_mismatch = 0x7f0c002a;
+		public static final int mtm_notification = 0x7f0c002b;
+		public static final int mtm_trust_anchor = 0x7f0c002c;
 	}
 }
