@@ -9,7 +9,7 @@ An XMPP Client
 
 </div>
 
-<br/><br/><br/><br/>
+<br/><br/>
 
 <div align="left">
     <img width="40%" src="snapshots/device-2014-12-15-175223.png" alt="About screen" title="About screen"</img>
