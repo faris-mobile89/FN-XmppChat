@@ -4,7 +4,7 @@ FN-XmppChat
 An XMPP Client
 
 <div align="left">
-     <img width="20%" src="snapshots/device-2014-12-15-174240.png" alt="About screen" title="About screen"</img>
+     <img width="20%" src="snapshots/device-2014-12-16-085212.png" alt="About screen" title="About screen"</img>
         <img width="20%" src="snapshots/device-2014-12-15-1751371.png" alt="About screen" title="About screen"</img>
 </div>
 <div align="left">
