@@ -6,7 +6,7 @@
 	<color name="textShadow">#FFF</color>
 	<color name="listViewBg">#DADFEE</color>
 	<color name="grayTitle">#484b43</color>
-
+    <color name="user_image_color">#e9e9e9</color>
 	<color name="sendLightColor">#8897BF</color>
 	<color name="sendMeduimColor">#5D6CA5</color>
 	<color name="sendDarkColor">#515F9F</color>
@@ -14,7 +14,6 @@
 	<color name="barDarkColor">#CECECE</color>
 	<color name="barMeduimColor">#DFDEE0</color>
 	<color name="barLightColor">#F2F2F2</color>
-	
 	 <color name="action_bar_background_color">#0d70b3</color>
     <color name="link_text_color">#0d70b3</color>
 
@@ -36,8 +35,8 @@
     <color name="button_null_background_pressed_color">#e4f4ff</color>
     <color name="button_end_call_normal_color">#ff0000</color>
     <color name="button_end_call_pressed_color">#e4f4ff</color>
-    <color name="button_blue_normal_color">#0d70b3</color>
-    <color name="button_blue_pressed_color">#ff0d5389</color>
+    <color name="button_blue_normal_color">#b70d5389</color>
+    <color name="button_blue_pressed_color">#be0daee9</color>
 
     <color name="avatar_border_color">#ffffff</color>
     <color name="circle_view_mask_color">#ffffff</color>

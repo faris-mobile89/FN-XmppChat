@@ -6,17 +6,14 @@ import com.fn.reunion.app.R;
 
 public class Consts {
 
-    // Q-municate
     public static final String QB_APP_ID = "13318";
     public static final String QB_AUTH_KEY = "WzrAY7vrGmbgFfP";
     public static final String QB_AUTH_SECRET = "xS2uerEveGHmEun";
 
-    public static final String QB_DOMAIN = "api.stage.quickblox.com";
 
     // Friend list consts
     public static final int FL_FRIENDS_PAGE_NUM = 1;
     public static final int FL_FRIENDS_PER_PAGE = 500;
-
     public static final int CHATS_DIALOGS_PER_PAGE = 500;
     public static final int DIALOG_MESSAGES_PER_PAGE = 500;
 
@@ -26,7 +23,7 @@ public class Consts {
     public static final String SPACE = " ";
 
     public static final int SECOND = 1000;
-    
+
     public static final int NOTIFICATION_ID = 789172170;
 
     public static final int DEFAULT_PACKET_REPLY_TIMEOUT = 15 * 1000;

@@ -22,6 +22,7 @@ import com.beardedhen.androidbootstrap.BootstrapCircleThumbnail;
 import com.fn.reunion.app.R;
 import com.fn.reunion.app.model.FriendTempData;
 import com.fn.reunion.app.ui.privateChat.MessageActivity;
+import com.fn.reunion.app.ui.profile.ProfileActivity;
 import com.fn.reunion.app.utility.CircleBitmapDisplayer;
 import com.fn.reunion.app.xmpp.NotificationService;
 import com.fn.reunion.app.xmpp.XmppManager;
@@ -123,18 +124,21 @@ public class MenuListFragment extends ListFragment {
 
      SampleItem item = mMenuItems.get(position);
 
-     if (item.getRowType().equals(RowType.NAVIGATION)) {
-           switch (position) {
+        if (item.getRowType().equals(RowType.ACCOUNT)) {
+            startActivity(new Intent(getActivity(), ProfileActivity.class));
+        }
+        else if (item.getRowType().equals(RowType.NAVIGATION)) {
+               switch (position) {
                case 2:
                  ((AppBaseActivity) getActivity()).viewPager.setCurrentItem(0);
                  break;
-             case 3:
+                case 3:
                  ((AppBaseActivity) getActivity()).viewPager.setCurrentItem(1);
                  break;
          }
            ((AppBaseActivity)getActivity()).getSlidingMenu().showContent();
 
-     }else  if (item.getRowType().equals(RowType.FRIENDS)){
+       }else  if (item.getRowType().equals(RowType.FRIENDS)){
            Intent intent = new Intent(getActivity(),MessageActivity.class);
            intent.putExtra("username", item.getFriend().getUserID());
            intent.putExtra("nickName", item.getFriend().getNickname());

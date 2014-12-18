@@ -1,5 +1,6 @@
 package com.fn.reunion.app.utility;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -15,9 +16,12 @@ import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,7 +58,7 @@ public class Utility {
 			Log.e("tag", "unable to add contact: ", e);
 		}
 	}
-		
+
 		@SuppressLint("SimpleDateFormat")
 		public static String getCurrentTime(){
 		/*	
@@ -104,10 +108,10 @@ public class Utility {
 		    return topActivityName.equalsIgnoreCase(context.getPackageName());
 		}
 		
-		/**
-		 *Check Internet connectivity by ping
-		 */
-		public Boolean isOnline() {
+	/**
+	*Check Internet connectivity by ping
+	*/
+	public Boolean isOnline() {
 		    Process p1 = null;
 			try {
 		        p1 = java.lang.Runtime.getRuntime().exec("ping -c 1 www.google.com");
@@ -130,38 +134,6 @@ public class Utility {
 		    }
 		    return false;
 		}
-		
-		
-		public static void showImage(Context mContext, ImageView imageView) {
-		    PhotoViewAttacher mAttacher;
-	        ImageView tempImageView = imageView;
-
-	        Dialog imageDialog = new Dialog(mContext,android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-	        imageDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.BLACK));
-	        imageDialog.setCancelable(true);
-	        LayoutInflater inflater =
-	                (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	        
-	        imageDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-	        
-	        View view = inflater.inflate(R.layout.custom_fullimage_dialog,null);
-
-	        ImageView image = (ImageView) view.findViewById(R.id.fullimage);
-	        image.setImageDrawable(tempImageView.getDrawable());
-	        imageDialog.addContentView(view, new RelativeLayout.LayoutParams(
-	                ViewGroup.LayoutParams.MATCH_PARENT, 
-	                ViewGroup.LayoutParams.MATCH_PARENT));
-	        
-		    mAttacher = new PhotoViewAttacher(image);
-		    mAttacher.canZoom();
-	        
-	      /*  imageDialog.setPositiveButton(mContext.getResources().getString(R.string.ok_button), new DialogInterface.OnClickListener(){
-	            public void onClick(DialogInterface dialog, int which) {
-	                dialog.dismiss();
-	            }
-	        });*/
 
 
-	        imageDialog.show();     
-	    }
 }

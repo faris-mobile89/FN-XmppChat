@@ -12,22 +12,22 @@ public final class R {
 		public static final int activity_vertical_margin = 0x7f09002e;
 	}
 	public static final class drawable {
-		public static final int ic_empty = 0x7f020408;
-		public static final int ic_error = 0x7f02040a;
-		public static final int ic_launcher = 0x7f020415;
-		public static final int ic_loading = 0x7f020416;
+		public static final int ic_empty = 0x7f02040c;
+		public static final int ic_error = 0x7f02040e;
+		public static final int ic_launcher = 0x7f020419;
+		public static final int ic_loading = 0x7f02041a;
 	}
 	public static final class id {
-		public static final int buttonEmpty = 0x7f0a00a9;
-		public static final int buttonError = 0x7f0a00aa;
-		public static final int buttonLoading = 0x7f0a00ac;
-		public static final int imageViewLoading = 0x7f0a00ab;
-		public static final int textViewMessage = 0x7f0a00a8;
+		public static final int buttonEmpty = 0x7f0a00ad;
+		public static final int buttonError = 0x7f0a00ae;
+		public static final int buttonLoading = 0x7f0a00b0;
+		public static final int imageViewLoading = 0x7f0a00af;
+		public static final int textViewMessage = 0x7f0a00ac;
 	}
 	public static final class layout {
-		public static final int view_empty = 0x7f030040;
-		public static final int view_error = 0x7f030041;
-		public static final int view_loading = 0x7f030042;
+		public static final int view_empty = 0x7f030041;
+		public static final int view_error = 0x7f030042;
+		public static final int view_loading = 0x7f030043;
 	}
 	public static final class string {
 		public static final int action_settings = 0x7f0c0010;

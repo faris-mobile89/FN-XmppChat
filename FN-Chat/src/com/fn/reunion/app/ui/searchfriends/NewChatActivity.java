@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.fn.reunion.app.R;
@@ -23,7 +24,9 @@ public class NewChatActivity  extends Activity{
 		setContentView(R.layout.search_layout);
 		editSearchKeyword = (EditText)findViewById(R.id.edittext_searchKeyword);
 		buttonSearch = (Button)findViewById(R.id.buttonSearch);
-		
+		RadioGroup radioGroup = (RadioGroup)findViewById(R.id.radioGroupGender);
+        radioGroup.setVisibility(View.INVISIBLE);
+
 		radioButtonMale =  (RadioButton)findViewById(R.id.radioMale);
 		radioButtonFemale= (RadioButton)findViewById(R.id.radioFemale);
 		buttonSearch.setOnClickListener(new View.OnClickListener() {
@@ -33,11 +36,13 @@ public class NewChatActivity  extends Activity{
 				
 				String keyword = editSearchKeyword.getText().toString();
 				if (keyword.length() < 1 ) {
-					editSearchKeyword.setError("plase enter name or phone number");
+					editSearchKeyword.setError("please enter name or phone number");
 					return;
 				}
-				
+
 				String gender = null ;
+                gender = "m";
+
 				if (radioButtonFemale.isChecked()) {
 					gender = "f";
 				}

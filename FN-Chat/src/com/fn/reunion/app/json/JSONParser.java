@@ -26,7 +26,7 @@ public class JSONParser {
 	static InputStream is = null;
 	static JSONObject jObj = null;
 	static String json = "";
-	private String tag = "JSONParser";
+	private static String tag = "JSONParser";
 
 	public JSONParser() {
 
@@ -49,7 +49,7 @@ public class JSONParser {
 				DefaultHttpClient httpClient = new DefaultHttpClient();
 				String paramString = URLEncodedUtils.format(params, "utf-8");
 				url += "?" + paramString;
-				Log.i("URL",url);
+				Log.i(tag,url);
 				HttpGet httpGet = new HttpGet(url);
 
 				HttpResponse httpResponse = httpClient.execute(httpGet);

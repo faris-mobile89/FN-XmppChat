@@ -495,6 +495,10 @@ public class XmppManager implements GenericConnection {
 					Log.e(LOGTAG, "XMPP connection failed", e);
 					running = false;
 				}
+                catch (Exception e){
+                    running = false;
+                    Log.e(LOGTAG, "XMPP connection failed", e);
+                }
 
 				xmppManager.runTask();
 

@@ -38,6 +38,7 @@ import android.widget.TextView;
 import com.fn.reunion.app.R;
 import com.fn.reunion.app.model.MMessage;
 import com.fn.reunion.app.model.MMessage.MessageType;
+import com.fn.reunion.app.utility.ImageUtillity;
 import com.fn.reunion.app.utility.Utility;
 
 
@@ -126,7 +127,7 @@ public class AwesomeAdapter extends BaseAdapter{
 						
 						@Override
 						public void onClick(View arg0) {
-							Utility.showImage(mContext,holder.image);
+                            ImageUtillity.showImage(mContext, holder.image);
 						}
 					});
 			  }

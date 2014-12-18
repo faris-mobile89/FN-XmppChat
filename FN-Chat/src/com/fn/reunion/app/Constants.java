@@ -33,9 +33,17 @@ public class Constants {
 	public static final String KEY_POST = "POST";
 	
 	public static final int CONFIRMED_FLAG = 1;
+    public static final int ERROR_CODE = 1;
 	
 	public static final String HOST = "http://192.168.11.21";
 	public static final String API_URL = "/mena_chat/api.php";
+
+
+    /*
+     * Shared Preferences kes
+     */
+
+    public static final String KEY_SHOW_MY_LOCATION = "locationValue";
 	
 	public static final DisplayImageOptions options =  new DisplayImageOptions.Builder()
 	.showImageOnLoading(R.drawable.ic_empty)

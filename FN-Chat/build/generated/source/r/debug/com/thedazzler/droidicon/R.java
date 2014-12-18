@@ -203,19 +203,19 @@ public final class R {
 		public static final int abc_config_showMenuShortcutsWhenKeyboardPresent = 0x7f070005;
 	}
 	public static final class color {
-		public static final int abc_background_cache_hint_selector_material_dark = 0x7f0800d2;
-		public static final int abc_background_cache_hint_selector_material_light = 0x7f0800d3;
+		public static final int abc_background_cache_hint_selector_material_dark = 0x7f0800d3;
+		public static final int abc_background_cache_hint_selector_material_light = 0x7f0800d4;
 		public static final int abc_input_method_navigation_guard = 0x7f080000;
-		public static final int abc_primary_text_disable_only_material_dark = 0x7f0800d4;
-		public static final int abc_primary_text_disable_only_material_light = 0x7f0800d5;
-		public static final int abc_primary_text_material_dark = 0x7f0800d6;
-		public static final int abc_primary_text_material_light = 0x7f0800d7;
-		public static final int abc_search_url_text = 0x7f0800d8;
+		public static final int abc_primary_text_disable_only_material_dark = 0x7f0800d5;
+		public static final int abc_primary_text_disable_only_material_light = 0x7f0800d6;
+		public static final int abc_primary_text_material_dark = 0x7f0800d7;
+		public static final int abc_primary_text_material_light = 0x7f0800d8;
+		public static final int abc_search_url_text = 0x7f0800d9;
 		public static final int abc_search_url_text_normal = 0x7f080001;
 		public static final int abc_search_url_text_pressed = 0x7f080002;
 		public static final int abc_search_url_text_selected = 0x7f080003;
-		public static final int abc_secondary_text_material_dark = 0x7f0800d9;
-		public static final int abc_secondary_text_material_light = 0x7f0800da;
+		public static final int abc_secondary_text_material_dark = 0x7f0800da;
+		public static final int abc_secondary_text_material_light = 0x7f0800db;
 		public static final int accent_material_dark = 0x7f080004;
 		public static final int accent_material_light = 0x7f080005;
 		public static final int amethyst = 0x7f08000c;
@@ -290,9 +290,9 @@ public final class R {
 		public static final int tumblr = 0x7f0800cb;
 		public static final int twitter_bg = 0x7f0800cc;
 		public static final int twitter_blue = 0x7f0800cd;
-		public static final int vimeo = 0x7f0800ce;
-		public static final int white = 0x7f0800d0;
-		public static final int youtube = 0x7f0800d1;
+		public static final int vimeo = 0x7f0800cf;
+		public static final int white = 0x7f0800d1;
+		public static final int youtube = 0x7f0800d2;
 	}
 	public static final class dimen {
 		public static final int abc_action_bar_default_height_material = 0x7f090000;
@@ -391,9 +391,9 @@ public final class R {
 		public static final int abc_textfield_search_activated_mtrl_alpha = 0x7f020036;
 		public static final int abc_textfield_search_default_mtrl_alpha = 0x7f020037;
 		public static final int abc_textfield_search_material = 0x7f020038;
-		public static final int badge = 0x7f02003f;
-		public static final int ic_launcher = 0x7f020415;
-		public static final int test = 0x7f020493;
+		public static final int badge = 0x7f020040;
+		public static final int ic_launcher = 0x7f020419;
+		public static final int test = 0x7f02049a;
 	}
 	public static final class id {
 		public static final int action_bar = 0x7f0a0041;
@@ -490,8 +490,8 @@ public final class R {
 		public static final int abc_search_view = 0x7f030015;
 		public static final int abc_simple_dropdown_hint = 0x7f030016;
 		public static final int badge = 0x7f03001a;
-		public static final int premade_badge = 0x7f030032;
-		public static final int support_simple_spinner_dropdown_item = 0x7f03003f;
+		public static final int premade_badge = 0x7f030033;
+		public static final int support_simple_spinner_dropdown_item = 0x7f030040;
 	}
 	public static final class raw {
 		public static final int entypo = 0x7f050001;

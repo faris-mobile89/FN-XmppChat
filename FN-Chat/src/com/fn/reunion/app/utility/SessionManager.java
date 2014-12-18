@@ -38,6 +38,7 @@ public class SessionManager {
 		editor.putString("phone", user.getPhone());
 		editor.putString("email", user.getEmail());
 
+
 		editor.commit();
 	}
 

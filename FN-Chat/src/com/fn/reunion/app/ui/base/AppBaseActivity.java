@@ -147,6 +147,8 @@ import de.keyboardsurfer.android.widget.crouton.Configuration;
     	} catch (NullPointerException e) {
     		Log.e(TAG, "initXMPP faild");
             Crouton.makeText(this, "Not Connected to the server", Style.ALERT).setConfiguration(Configuration.DEFAULT).show();
+        }catch (Exception e){
+          //TODO set error message
         }
 	}
 
@@ -316,8 +318,10 @@ import de.keyboardsurfer.android.widget.crouton.Configuration;
         		       return;
         		   }
         		} catch(NullPointerException e){
-        		    e.printStackTrace();
-        		}
+
+        		}catch (Exception e){
+
+               }
         	   
         	   try{
         			  mHandler.postDelayed(this, 5000);
