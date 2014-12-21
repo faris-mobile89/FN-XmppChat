@@ -58,7 +58,7 @@ public interface GenericConnection {
            throws BadConnectionException;
 
    public ArrayList<FriendTempData> retrieveFriendList()
-           throws BadConnectionException;
+           throws BadConnectionException, XMPPException;
 
    public void sendMessage(String toUserID, String message)
            throws BadConnectionException;

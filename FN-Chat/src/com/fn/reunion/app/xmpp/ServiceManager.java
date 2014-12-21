@@ -24,7 +24,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
-/** 
+/**
  * This class is to manage the notificatin service and to load the configuration.
  * @author Sehwan Noh (devnoh@gmail.com)
  */
@@ -70,15 +70,15 @@ public final class ServiceManager {
         //        //            Log.e(LOGTAG, "Please set the androidpn api key in the manifest file.");
         //        //            throw new RuntimeException();
         //        //        }
-        
+
 
         props = loadProperties();
-       // apiKey = props.getProperty("apiKey", "");
+        // apiKey = props.getProperty("apiKey", "");
         xmppHost = Constants.XMPP_HOST_IP;
         xmppPort = Constants.XMPP_HOST_PORT;
         Log.i(LOGTAG, "xmppHost=" + xmppHost);
         Log.i(LOGTAG, "xmppPort=" + xmppPort);
-        
+
         sharedPrefs = context.getSharedPreferences(Constants.SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE);
         Editor editor = sharedPrefs.edit();
         editor.putString(Constants.API_KEY, apiKey);
@@ -100,7 +100,7 @@ public final class ServiceManager {
         Thread serviceThread = new Thread(new Runnable() {
             @Override
             public void run() {
-            	 Intent intent = new Intent(context, NotificationService.class); // custom by FN
+                Intent intent = new Intent(context, NotificationService.class); // custom by FN
                 //Intent intent = NotificationService.getIntent();
                 context.startService(intent);
             }

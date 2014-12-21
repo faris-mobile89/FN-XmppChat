@@ -29,10 +29,10 @@ public class PhoneStateChangeListener extends PhoneStateListener {
     private static final String LOGTAG = LogUtil
             .makeLogTag(PhoneStateChangeListener.class);
 
-    private final NotificationService notificationService;
+    private final NotificationService xmppService;
 
-    public PhoneStateChangeListener(NotificationService notificationService) {
-        this.notificationService = notificationService;
+    public PhoneStateChangeListener(NotificationService xmppService) {
+        this.xmppService = xmppService;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class PhoneStateChangeListener extends PhoneStateListener {
         Log.d(LOGTAG, "Data Connection State = " + getState(state));
         
         if (state == TelephonyManager.DATA_CONNECTED) {
-            notificationService.connect(); 
+            xmppService.connect();
         }
     }
 

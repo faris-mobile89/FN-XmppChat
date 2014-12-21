@@ -32,10 +32,10 @@ public class ConnectivityReceiver extends BroadcastReceiver {
     private static final String LOGTAG = LogUtil
             .makeLogTag(ConnectivityReceiver.class);
 
-    private NotificationService notificationService;
+    private NotificationService xmppService;
 
-    public ConnectivityReceiver(NotificationService notificationService) {
-        this.notificationService = notificationService;
+    public ConnectivityReceiver(NotificationService xmppService) {
+        this.xmppService = xmppService;
     }
 
     @Override
@@ -54,11 +54,11 @@ public class ConnectivityReceiver extends BroadcastReceiver {
             Log.d(LOGTAG, "Network State = " + networkInfo.getState());
             if (networkInfo.isConnected()) {
                 Log.i(LOGTAG, "Network connected");
-                notificationService.connect();
+                xmppService.connect();
             }
         } else {
             Log.e(LOGTAG, "Network unavailable");
-            notificationService.disconnect();
+            xmppService.disconnect();
         }
     }
 

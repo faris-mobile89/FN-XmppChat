@@ -18,11 +18,11 @@ public final class R {
 		public static final int ic_loading = 0x7f02041a;
 	}
 	public static final class id {
-		public static final int buttonEmpty = 0x7f0a00ad;
-		public static final int buttonError = 0x7f0a00ae;
-		public static final int buttonLoading = 0x7f0a00b0;
-		public static final int imageViewLoading = 0x7f0a00af;
-		public static final int textViewMessage = 0x7f0a00ac;
+		public static final int buttonEmpty = 0x7f0a00b0;
+		public static final int buttonError = 0x7f0a00b1;
+		public static final int buttonLoading = 0x7f0a00b3;
+		public static final int imageViewLoading = 0x7f0a00b2;
+		public static final int textViewMessage = 0x7f0a00af;
 	}
 	public static final class layout {
 		public static final int view_empty = 0x7f030041;

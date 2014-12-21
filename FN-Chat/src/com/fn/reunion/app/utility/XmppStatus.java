@@ -16,7 +16,7 @@ public class XmppStatus {
 	      editor.commit();
 	}
 	
-	public static boolean isServiceManager(Context c){
+	public static boolean isServiceManagerRunning(Context c){
 		Context context = c;
 		SharedPreferences sharedPref = context.getSharedPreferences(
 	    		  context.getString(R.string.preference_XMPP_key), Context.MODE_PRIVATE);

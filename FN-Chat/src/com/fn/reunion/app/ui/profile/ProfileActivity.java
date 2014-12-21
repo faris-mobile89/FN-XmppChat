@@ -169,6 +169,8 @@ public class ProfileActivity extends Activity {
 
     @Override
     protected void onPause() {
+        super.onPause();
+
        if (uploadProfileImage != null)
           uploadProfileImage.cancel(true);
     }

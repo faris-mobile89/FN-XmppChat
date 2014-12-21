@@ -59,7 +59,7 @@
         </activity>
 
         <service
-            android:name="com.fn.reunion.app.xmpp.NotificationService"
+            android:name=".xmpp.XMPPChatService"
             android:enabled="true"
             android:label="NotificationService" >
             <intent-filter>

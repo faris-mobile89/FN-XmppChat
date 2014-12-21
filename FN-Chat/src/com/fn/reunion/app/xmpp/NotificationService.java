@@ -15,11 +15,6 @@
  */
 package com.fn.reunion.app.xmpp;
 
-import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
 import android.app.Activity;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -32,6 +27,11 @@ import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+
+import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Service that continues to run in background and respond to the push 

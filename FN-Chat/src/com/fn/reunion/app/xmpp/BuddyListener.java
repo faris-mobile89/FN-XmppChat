@@ -66,8 +66,9 @@ public class BuddyListener implements RosterListener {
     public void presenceChanged(Presence presence) {
     	
     	   String from  = presence.getFrom();
+
     	   //Log.i(tag, presence.getMode().toString());
-    	   new BuddiesController(context).notifyPresenceChanged(from ,presence.getMode());
+    	   new BuddiesController(context).notifyPresenceChanged(from ,presence.getMode(),presence.getStatus());
         return;
     }
 }

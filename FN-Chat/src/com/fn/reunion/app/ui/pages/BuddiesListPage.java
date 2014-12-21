@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence.Mode;
 import org.jivesoftware.smack.util.StringUtils;
@@ -68,10 +69,14 @@ public class BuddiesListPage extends Fragment {
 	private String TAG = "BuddiesList";
 	
 	public static void updateRoster(List<Contact> registeredContacts){
-		
-	   friends  = xmppManager.retrieveFriendList();
-	   
-	   for (FriendTempData friend : friends) {
+
+        try {
+            friends  = xmppManager.retrieveFriendList();
+        } catch (XMPPException e) {
+
+        }
+
+        for (FriendTempData friend : friends) {
 		   
 			String userId  = StringUtils.parseName(friend.getUserID());
 			
@@ -95,37 +100,40 @@ public class BuddiesListPage extends Fragment {
 		adapter.updateAdapter(friends);
 	}
     
-	public static void presenceChanged(String fromUserId,Mode mode){
+	public static void presenceChanged(String fromUserId,Mode mode , String status){
 		
 		Log.i("BuddiesList", "presenceChanged");
+		try {
+            if (xmppManager == null) {
+                return;
+            }
 
-		
-		if (xmppManager == null) {
-			return;
-		}
-		
-    	if (xmppManager.isConnected() && friends != null) {
-    		Log.i("BuddiesList", friends.size()+" user");
-    		fromUserId = StringUtils.parseName(fromUserId);
-    	 	// search on user
-    		for (FriendTempData friend : friends) {
-    		   String userId  = StringUtils.parseName(friend.getUserID());
-				if (userId.equals(fromUserId) ) {
-					Log.d("BuddiesList", "presenceChanged() to user: "+fromUserId +"  Mode : " +mode+
-							"to string :"+mode.toString()+" length :"+mode.toString().length());
-					if (mode.equals(Mode.available)||mode.equals(Mode.away)||mode.equals(Mode.chat)){
-					    friend.setState(UserStateType.ONLINE);
-					    break;
-					}else
-					   if (mode.equals(Mode.xa)|| mode.equals(Mode.dnd)){
-						   friend.setState(UserStateType.OFFLINE);
-						   break;
-						}
-				}
-			 }
-    		//Log.i("BuddiesList", FriendsRoster.getInstance().getFriendsRoster().size()+" user getInstance()");
-        	adapter.updateAdapter(friends);
-		}
+            if (xmppManager.isConnected() && friends != null) {
+                Log.i("BuddiesList", friends.size() + " user");
+                fromUserId = StringUtils.parseName(fromUserId);
+                // search on user
+                for (FriendTempData friend : friends) {
+                    String userId = StringUtils.parseName(friend.getUserID());
+                    if (userId.equals(fromUserId)) {
+                        Log.d("BuddiesList", "presenceChanged() to user: " + fromUserId + "  Mode : " + mode +
+                                "to string :" + mode.toString() + " length :" + mode.toString().length());
+                        if (mode.equals(Mode.available) || mode.equals(Mode.away) || mode.equals(Mode.chat)) {
+                            friend.setState(UserStateType.ONLINE);
+                            friend.setStatus(status);
+                            break;
+                        } else if (mode.equals(Mode.xa) || mode.equals(Mode.dnd)) {
+                            friend.setState(UserStateType.OFFLINE);
+                            friend.setStatus(status);
+                            break;
+                        }
+                    }
+                }
+                //Log.i("BuddiesList", FriendsRoster.getInstance().getFriendsRoster().size()+" user getInstance()");
+                adapter.updateAdapter(friends);
+            }
+        }catch(Exception e){
+
+        }
     }
 	
 	public static void incomingMessage(String fromUserID, String toUserID, String message){
@@ -162,21 +170,19 @@ public class BuddiesListPage extends Fragment {
 		
         registerForContextMenu(list);
         try {
-        	xmppManager = NotificationService .getInstance().getXmppManager();		  
+        	xmppManager = NotificationService.getInstance().getXmppManager();
             if (!xmppManager.isConnected()) {
     			   buddiesHandler.postDelayed(new loadBuddiesList(),2000);
     		   }else{
-    			   friends  = xmppManager.retrieveFriendList();
-    			   viewRosters();
+                 xmppManager.getConnection().addConnectionListener(new MConnectionListener());
+                 friends  = xmppManager.retrieveFriendList();
+    			 viewRosters();
     		   }
-		} catch (Exception e) {
-		}
-		
-        
+		   } catch (Exception e) {
+               buddiesHandler.postDelayed(new loadBuddiesList(),2000);
+            }
 		// SyncXMPPUsers.initiate(getBaseContext());
 	}
-
-
 
     @Override
 	public void onPause() {
@@ -205,7 +211,6 @@ public class BuddiesListPage extends Fragment {
             }
         });
     }
-
 
     private void viewRosters() throws XMPPException {
 
@@ -262,7 +267,6 @@ public class BuddiesListPage extends Fragment {
     }
 
     private void createPoppyViewOnListView(){
-
 
         View poppyView = mPoppyViewHelper.createPoppyViewOnListView(R.id.buddiesList, R.layout.poppyview, new AbsListView.OnScrollListener() {
             @Override
@@ -367,13 +371,16 @@ public class BuddiesListPage extends Fragment {
 		public void run() {
 			Log.d(TAG, "loadBuddiesList.run()");
 			try {
-				 xmppManager = NotificationService .getInstance().getXmppManager();
-				 if (xmppManager.isConnected()) {
+				 xmppManager = NotificationService.getInstance().getXmppManager();
+                if (xmppManager.isConnected()) {
+                    xmppManager.getConnection().addConnectionListener(new MConnectionListener());
+                    Log.i(TAG, "loadBuddiesList XMPP Connected");
 					   friends  = xmppManager.retrieveFriendList();
-					   viewRosters();
-					   Log.i(TAG, "loadBuddiesList XMPP Connected");
-					   Log.i(TAG, "loadBuddiesList friends size:"+friends.size());
-                       Crouton.makeText(getActivity(), "Connected to server", Style.INFO).setConfiguration(Configuration.DEFAULT).show();
+                       //Log.i(TAG, "loadBuddiesList friends size:"+friends.size());
+                    if (friends != null && friends.size() > 0)
+                       viewRosters();
+
+                      Crouton.makeText(getActivity(), "Connected to server", Style.INFO).setConfiguration(Configuration.DEFAULT).show();
                  }else{
 					   Log.d(TAG, "loadBuddiesList not connected ...");
                        Crouton.makeText(getActivity(), "Trying to Connect to server", Style.CONFIRM).setConfiguration(Configuration.DEFAULT).show();
@@ -381,9 +388,10 @@ public class BuddiesListPage extends Fragment {
                  }
 				 
 			 } catch (Exception e) {
-                Log.e(TAG, "loadBuddiesList Exception");
+                Log.e(TAG, "loadBuddiesList Exception" + e.getStackTrace()[0]);
+                Log.i(TAG, "loadBuddiesList waiting xmppService with delay 3 seconds");
+                //Crouton.makeText(getActivity(), "Trying to Connect to server", Style.CONFIRM).setConfiguration(Configuration.DEFAULT).show();
                 buddiesHandler.postDelayed(this, 3000);
-                Crouton.makeText(getActivity(), "Trying to Connect to server", Style.CONFIRM).setConfiguration(Configuration.DEFAULT).show();
             }
 		}
     }
@@ -435,14 +443,20 @@ public class BuddiesListPage extends Fragment {
 				holder = new ViewHolder();
 				holder.name = (TextView) convertView.findViewById(R.id.buddyName);
 				holder.status = (TextView) convertView.findViewById(R.id.status);
+                holder.statusText = (TextView) convertView.findViewById(R.id.status_text);
 				holder.thumb = (ImageView) convertView.findViewById(R.id.buddyThumb);
 				holder.badge = (TextView) convertView.findViewById(R.id.badge_unread_message);
+                holder.lastMessage = (TextView) convertView.findViewById(R.id.last_message);
+
+
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-			
-			holder.name.setText(friend.getNickname());
+
+            holder.lastMessage.setVisibility(View.GONE);
+
+            holder.name.setText(friend.getNickname());
 			
 			if (friend.getUnreadMesssageCount() > 0 ) {
 				holder.badge.setBackgroundDrawable(getResources().getDrawable(R.drawable.badge_unread_messages_counter));
@@ -454,10 +468,15 @@ public class BuddiesListPage extends Fragment {
 			
 			if (friend.getState() == UserStateType.ONLINE){
 			    holder.status.setBackgroundDrawable(getResources().getDrawable(R.drawable.badge_online));
-			}else{
+                holder.statusText.setText(friend.getStatus());
+                holder.statusText.setTextColor(getResources().getColor(R.color.linkedin));
+            }else{
 			    holder.status.setBackgroundDrawable(getResources().getDrawable(R.drawable.badge_offline));
-			}
-
+               // holder.statusText.setText("Offline");
+                holder.statusText.setText(friend.getStatus());
+                if (friend.getState().toString().length() < 1)
+                    holder.statusText.setText("Offline");
+            }
 
 			
 			return convertView;
@@ -466,6 +485,39 @@ public class BuddiesListPage extends Fragment {
 	
 	class ViewHolder {
 		ImageView thumb;
-		TextView name,status,badge;
+		TextView name,status,statusText,badge,lastMessage;
 	}
+
+    private class MConnectionListener implements ConnectionListener{
+
+        public MConnectionListener(){
+
+        }
+
+        @Override
+        public void connectionClosed() {
+            Log.d(TAG,"connectionClosed");
+        }
+
+        @Override
+        public void connectionClosedOnError(Exception e) {
+            Log.d(TAG,"connectionClosedOnError");
+        }
+
+        @Override
+        public void reconnectingIn(int i) {
+            Log.d(TAG,"reconnectingIn");
+        }
+
+        @Override
+        public void reconnectionSuccessful() {
+            Log.d(TAG,"reconnectionSuccessful");
+        }
+
+        @Override
+        public void reconnectionFailed(Exception e) {
+            Log.d(TAG,"reconnectionFailed");
+
+        }
+    }
 }

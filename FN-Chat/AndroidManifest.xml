@@ -65,11 +65,12 @@
         <service
             android:name=".xmpp.NotificationService"
             android:enabled="true"
-            android:label="NotificationService" >
+            android:label="NotificationService">
             <intent-filter>
-                <action android:name="org.androidpn.client.NotificationService" />
+                <action android:name="com.fn.reunion.app.client.NotificationService" />
             </intent-filter>
         </service>
+
         <!--
 			<meta-data android:name="ANDROIDPN_API_KEY"
 			android:value="1234567890" />

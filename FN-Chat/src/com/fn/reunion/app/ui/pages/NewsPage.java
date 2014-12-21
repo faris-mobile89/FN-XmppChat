@@ -47,7 +47,7 @@ public class NewsPage extends Fragment {
 
         webview.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Log.i(TAG, "Processing webview url click...");
+               // Log.i(TAG, "Processing webview url click...");
                 view.loadUrl(url);
                 return true;
             }
@@ -60,16 +60,7 @@ public class NewsPage extends Fragment {
             }
 
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                Log.e(TAG, "Error: " + description);
-                Toast.makeText(getActivity(), "Oh no! " + description, Toast.LENGTH_SHORT).show();
-                alertDialog.setTitle("Error");
-                alertDialog.setMessage(description);
-                alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        return;
-                    }
-                });
-                alertDialog.show();
+               // Log.e(TAG, "Error: " + description);
             }
         });
          webview.loadUrl(Constants.HOST+"/feeds/wall");

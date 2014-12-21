@@ -63,7 +63,7 @@ public class MenuListFragment extends ListFragment {
 			.displayer(new CircleBitmapDisplayer(0xffffffff, 2))
 			.build();
       try {
-         	xmppManager = NotificationService .getInstance().getXmppManager();		  
+         	xmppManager = NotificationService.getInstance().getXmppManager();
              if (!xmppManager.isConnected()) {
      			   buddiesHandler.postDelayed(new loadBuddiesList(),2000);
      		   }else{
@@ -102,7 +102,7 @@ public class MenuListFragment extends ListFragment {
 		public void run() {
 			Log.d(TAG, "loadBuddiesList.run()");
 			try {
-				 xmppManager = NotificationService .getInstance().getXmppManager();
+				 xmppManager = NotificationService.getInstance().getXmppManager();
 				 if (xmppManager.isConnected()) {
 					   friends  = xmppManager.retrieveFriendList();
 					   viewRosters();

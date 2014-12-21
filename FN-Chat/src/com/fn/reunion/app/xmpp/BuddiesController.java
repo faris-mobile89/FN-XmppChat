@@ -31,12 +31,12 @@ public class BuddiesController {
        });
     }
     
-    public void notifyPresenceChanged(final String from , final Mode mode) {
+    public void notifyPresenceChanged(final String from , final Mode mode , final String status) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
          	   if (mode != null) {
-         		   BuddiesListPage.presenceChanged(from,mode);
+         		   BuddiesListPage.presenceChanged(from,mode,status);
 				   }
             }
         });

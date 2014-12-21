@@ -26,7 +26,6 @@ public class SplashScreenActivity extends Activity {
 			  ServiceManager serviceManager = new ServiceManager(SplashScreenActivity.this);
 		      serviceManager.setNotificationIcon(R.drawable.app_launcher);
 		      serviceManager.startService();
-		      
 		      /**
 		       *  Save ServiceManager state
 		       */

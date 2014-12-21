@@ -152,7 +152,6 @@ public class FriendTempData {
 
    public void setState(UserStateType state) {
        this.state = state;
-
        return;
    }
 

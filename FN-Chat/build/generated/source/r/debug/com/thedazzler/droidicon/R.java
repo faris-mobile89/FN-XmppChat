@@ -393,7 +393,7 @@ public final class R {
 		public static final int abc_textfield_search_material = 0x7f020038;
 		public static final int badge = 0x7f020040;
 		public static final int ic_launcher = 0x7f020419;
-		public static final int test = 0x7f02049a;
+		public static final int test = 0x7f02049b;
 	}
 	public static final class id {
 		public static final int action_bar = 0x7f0a0041;

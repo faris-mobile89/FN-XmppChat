@@ -100,7 +100,7 @@ public class MessageActivity extends Activity implements OnRowAdditionAnimationL
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-	    xmppManager = NotificationService .getInstance().getXmppManager();
+	    xmppManager = NotificationService.getInstance().getXmppManager();
 		messages = new ArrayList<MMessage>();
 		reciever = StringUtils.parseName(getIntent().getExtras().getString("username"));
 		nickName = getIntent().getExtras().getString("nickName");

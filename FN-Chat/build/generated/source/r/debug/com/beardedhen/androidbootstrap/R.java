@@ -115,24 +115,24 @@ public final class R {
 		public static final int edittext_background_rounded_warning = 0x7f020084;
 		public static final int edittext_background_success = 0x7f020085;
 		public static final int edittext_background_warning = 0x7f020086;
-		public static final int thumbnail_circle = 0x7f02049c;
-		public static final int thumbnail_circle_container = 0x7f02049d;
-		public static final int thumbnail_circle_minimal = 0x7f02049e;
+		public static final int thumbnail_circle = 0x7f02049d;
+		public static final int thumbnail_circle_container = 0x7f02049e;
+		public static final int thumbnail_circle_minimal = 0x7f02049f;
 	}
 	public static final class id {
-		public static final int action_settings = 0x7f0a00b2;
+		public static final int action_settings = 0x7f0a00b5;
 		public static final int container = 0x7f0a005f;
 		public static final int dimensionsLabel = 0x7f0a0067;
 		public static final int image = 0x7f0a0033;
 		public static final int layout = 0x7f0a0061;
-		public static final int lblColA = 0x7f0a009d;
-		public static final int lblColB = 0x7f0a009e;
+		public static final int lblColA = 0x7f0a00a0;
+		public static final int lblColB = 0x7f0a00a1;
 		public static final int lblLeft = 0x7f0a0062;
 		public static final int lblMiddle = 0x7f0a0063;
 		public static final int lblRight = 0x7f0a0064;
-		public static final int lblSubTitle = 0x7f0a009c;
-		public static final int lblText = 0x7f0a007c;
-		public static final int lblTitle = 0x7f0a009b;
+		public static final int lblSubTitle = 0x7f0a009f;
+		public static final int lblText = 0x7f0a007f;
+		public static final int lblTitle = 0x7f0a009e;
 		public static final int placeholder = 0x7f0a0066;
 		public static final int txtText = 0x7f0a0065;
 	}

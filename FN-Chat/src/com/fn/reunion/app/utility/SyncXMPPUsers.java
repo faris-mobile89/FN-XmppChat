@@ -27,7 +27,7 @@ public class SyncXMPPUsers {
 	private SyncXMPPUsers() {
 		handler = new Handler(context.getMainLooper());
 		contacts = ContactsManager.getAllContacts(context, false);
-		manager = NotificationService .getInstance().getXmppManager();
+		manager = NotificationService.getInstance().getXmppManager();
 		registeredContacts = new ArrayList<Contact>();
 		notifyRosterUI();
 	}

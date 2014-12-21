@@ -15,24 +15,23 @@
  */
 package com.fn.reunion.app.xmpp;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.Future;
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.StrictMode;
+import android.util.Log;
+import android.widget.Toast;
 
-import javax.net.ssl.SSLContext;
+import com.fn.reunion.app.controller.BadConnectionException;
+import com.fn.reunion.app.controller.GenericConnection;
+import com.fn.reunion.app.controller.UserStateType;
+import com.fn.reunion.app.model.FriendTempData;
+import com.fn.reunion.app.model.TypingStateType;
+import com.fn.reunion.app.utility.SessionManager;
 
-import org.jivesoftware.smack.AccountManager;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
@@ -41,7 +40,6 @@ import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
-import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.filter.AndFilter;
@@ -120,74 +118,69 @@ import org.jivesoftware.smackx.pubsub.provider.SubscriptionsProvider;
 import org.jivesoftware.smackx.search.UserSearch;
 import org.jivesoftware.smackx.search.UserSearchManager;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.StrictMode;
-import android.util.Log;
-import android.widget.Toast;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.Future;
 
-import com.fn.reunion.app.controller.BadConnectionException;
-import com.fn.reunion.app.controller.GenericConnection;
-import com.fn.reunion.app.controller.UserStateType;
-import com.fn.reunion.app.model.FriendTempData;
-import com.fn.reunion.app.model.TypingStateType;
-import com.fn.reunion.app.ui.base.AppBaseActivity;
-import com.fn.reunion.app.ui.pages.BuddiesListPage;
-import com.fn.reunion.app.utility.SessionManager;
+import javax.net.ssl.SSLContext;
+
 import de.duenndns.ssl.MemorizingTrustManager;
-
-import de.keyboardsurfer.android.widget.crouton.Configuration;
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
 
 /**
  * This class is to manage the XMPP connection between client and server.
- * 
- * @author Faris Nemer (faris.it.cs@gmail.com)
+ *
+ * @author Faris Nemer <faris.it.cs@gmail.com>
  */
 public class XmppManager implements GenericConnection {
 
-	private static final String LOGTAG = LogUtil.makeLogTag(XmppManager.class);
+    private static final String LOGTAG = LogUtil.makeLogTag(XmppManager.class);
 
-	private static final String XMPP_RESOURCE_NAME = "Smack";
-	
-	private static final String tag = "XmppManager";
-	
-	private Context context;
+    private static final String XMPP_RESOURCE_NAME = "Smack";
 
-	private NotificationService.TaskSubmitter taskSubmitter;
+    private static final String tag = "XmppManager";
 
-	private NotificationService.TaskTracker taskTracker;
+    private Context context;
 
-	private SharedPreferences sharedPrefs;
+    private NotificationService.TaskSubmitter taskSubmitter;
 
-	private String xmppHost;
+    private NotificationService.TaskTracker taskTracker;
 
-	private int xmppPort;
+    private SharedPreferences sharedPrefs;
 
-	private XMPPConnection connection;
+    private String xmppHost;
 
-	private String username,password;
+    private int xmppPort;
 
-	private ConnectionListener connectionListener;
+    private XMPPConnection connection;
 
-	private PacketListener notificationPacketListener;
-	
-	private FileTransferManager fileManager;
+    private String username,password;
 
-	private Handler handler;
+    private ConnectionListener connectionListener;
 
-	private List<Runnable> taskList;
+    private PacketListener notificationPacketListener;
 
-	private boolean running = false;
+    private FileTransferManager fileManager;
 
-	private Future<?> futureTask;
+    private Handler handler;
 
-	private Thread reconnection;
-	
+    private List<Runnable> taskList;
+
+    private boolean running = false;
+
+    private Future<?> futureTask;
+
+    private Thread reconnection;
+
     private ArrayList<Chat> chats;
 
     private Chat lastChat;
@@ -196,531 +189,538 @@ public class XmppManager implements GenericConnection {
 
     private VCard vcard;
 
-	/**
-	 * XmppManager
-	 *
-	 * @param notificationService
-	 */
-    
-	public XmppManager(NotificationService notificationService) {
-		initService(notificationService);
-	}
-	
-	private void initService(NotificationService notificationService){
-		
-	if (android.os.Build.VERSION.SDK_INT > 9) {
-			StrictMode.ThreadPolicy policy =  new StrictMode.ThreadPolicy.Builder().permitAll().build();
-			StrictMode.setThreadPolicy(policy);
-		}
-	    
-		this.chats = new ArrayList<Chat>();
-	    vcard = new VCard();
-	    
-		context = notificationService;
-		taskSubmitter = notificationService.getTaskSubmitter();
-		taskTracker = notificationService.getTaskTracker();
-		sharedPrefs = notificationService.getSharedPreferences();
+    /**
+     * XmppManager
+     *
+     * @param xmppService
+     */
 
-		//xmppHost = sharedPrefs.getString(Constants.XMPP_HOST,"192.168.43.254");
-		xmppHost = Constants.XMPP_HOST_IP; // at menaIT
-		//xmppPort = sharedPrefs.getInt(Constants.XMPP_PORT, 5222);
-		xmppPort = Integer.parseInt(Constants.XMPP_HOST_PORT);
-		
-		username = sharedPrefs.getString(Constants.XMPP_USERNAME, "");
-		password = sharedPrefs.getString(Constants.XMPP_PASSWORD, "");
+    public XmppManager(NotificationService xmppService) {
+        initService(xmppService);
+    }
 
-		Log.i(LOGTAG, "init username&password = " + username + "@" + password);
+    private void initService(NotificationService xmppService){
 
-		connectionListener = new PersistentConnectionListener(this);
-		notificationPacketListener = new NotificationPacketListener(this);
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy =  new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
 
-		handler = new Handler();
-		taskList = new ArrayList<Runnable>();
-		/**
+        this.chats = new ArrayList<Chat>();
+        vcard = new VCard();
+
+        context = xmppService;
+        taskSubmitter = xmppService.getTaskSubmitter();
+        taskTracker = xmppService.getTaskTracker();
+        sharedPrefs = xmppService.getSharedPreferences();
+
+        //xmppHost = sharedPrefs.getString(Constants.XMPP_HOST,"192.168.43.254");
+        xmppHost = Constants.XMPP_HOST_IP; // at menaIT
+        //xmppPort = sharedPrefs.getInt(Constants.XMPP_PORT, 5222);
+        xmppPort = Integer.parseInt(Constants.XMPP_HOST_PORT);
+
+        username = sharedPrefs.getString(Constants.XMPP_USERNAME, "");
+        password = sharedPrefs.getString(Constants.XMPP_PASSWORD, "");
+
+        Log.i(LOGTAG, "init username&password = " + username + "@" + password);
+
+        connectionListener = new PersistentConnectionListener(this);
+        notificationPacketListener = new NotificationPacketListener(this);
+
+        handler = new Handler();
+        taskList = new ArrayList<Runnable>();
+        /**
          */
-		reconnection = new ReconnectionThread(this);
-	}
+        reconnection = new ReconnectionThread(this);
 
-	public Context getContext() {
-		return context;
-	}
+        //Toast.makeText(context, "Service XmppManager running...", Toast.LENGTH_LONG).show();
 
-	public void connect() {
-		Log.d(LOGTAG, "connect()...");
-		submitLoginTask();
-	}
+    }
 
-	public void disconnect() {
+    public Context getContext() {
+        return context;
+    }
+
+    public void connect() {
+        Log.d(LOGTAG, "connect()...");
+        submitLoginTask();
+    }
+
+    public void disconnect() {
         Log.d(LOGTAG, "disconnect()...");
         terminatePersistentConnection();
     }
 
-	/**
+    public boolean isConnected(){
+
+        return connection != null && connection.isConnected();
+    }
+
+    /**
      */
-	public void terminatePersistentConnection() {
-		Log.d(LOGTAG, "terminatePersistentConnection()...");
-		Runnable runnable = new Runnable() {
 
-			final XmppManager xmppManager = XmppManager.this;
+    public void terminatePersistentConnection() {
+        Log.d(LOGTAG, "terminatePersistentConnection()...");
+        Runnable runnable = new Runnable() {
 
-			public void run() {
-				if (xmppManager.isConnected()) {
-					Log.d(LOGTAG, "terminatePersistentConnection()... run()");
-					xmppManager.getConnection().removePacketListener(
-							xmppManager.getNotificationPacketListener());
-					xmppManager.getConnection().disconnect();
-				}
-				xmppManager.runTask();
-			}
-		};
-		addTask(runnable);
-	}
+            final XmppManager xmppManager = XmppManager.this;
 
-	public XMPPConnection getConnection() {
-		return connection;
-	}
+            public void run() {
+                if (xmppManager.isConnected()) {
+                    Log.d(LOGTAG, "terminatePersistentConnection()... run()");
+                    xmppManager.getConnection().removePacketListener(
+                            xmppManager.getNotificationPacketListener());
+                    xmppManager.getConnection().disconnect();
+                }
+                xmppManager.runTask();
+            }
+        };
+        addTask(runnable);
+    }
 
-	public void setConnection(XMPPConnection connection) {
-		this.connection = connection;
-		XMPPLogic.getInstance().setConnection(connection);
-	}
-	
-	public FileTransferManager getFileTransferManager(){
-		return fileManager;
-	}
+    public XMPPConnection getConnection() {
+        return connection;
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public void setConnection(XMPPConnection connection) {
+        this.connection = connection;
+        XMPPLogic.getInstance().setConnection(connection);
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public FileTransferManager getFileTransferManager(){
+        return fileManager;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
-	private void submitConnectTask() {
-		Log.d(LOGTAG, "submitConnectTask()...");
-		addTask(new ConnectTask());
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	private void submitRegisterTask() {
-		Log.d(LOGTAG, "submitRegisterTask()...");
-		submitConnectTask();
-		addTask(new RegisterTask());
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	private void submitLoginTask() {
-		Log.d(LOGTAG, "submitLoginTask()...");
-		submitRegisterTask();
-		addTask(new LoginTask());
-	}
-	
-	public ConnectionListener getConnectionListener() {
-		return connectionListener;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public PacketListener getNotificationPacketListener() {
-		return notificationPacketListener;
-	}
+    private void submitConnectTask() {
+        Log.d(LOGTAG, "submitConnectTask()...");
+        addTask(new ConnectTask());
+    }
 
-	/**
+    private void submitRegisterTask() {
+        Log.d(LOGTAG, "submitRegisterTask()...");
+        submitConnectTask();
+        addTask(new RegisterTask());
+    }
+
+    private void submitLoginTask() {
+        Log.d(LOGTAG, "submitLoginTask()...");
+        submitRegisterTask();
+        addTask(new LoginTask());
+    }
+
+    public ConnectionListener getConnectionListener() {
+        return connectionListener;
+    }
+
+    public PacketListener getNotificationPacketListener() {
+        return notificationPacketListener;
+    }
+
+    public void startReconnectionThread() {
+        synchronized (reconnection) {
+            if (!reconnection.isAlive()) {
+                reconnection.setName("Xmpp Reconnection Thread");
+                reconnection.start();
+            }
+        }
+    }
+
+    public Handler getHandler() {
+        return handler;
+    }
+
+    public void reRegisterAccount() {
+
+        removeAccount();
+        submitLoginTask();
+        runTask();
+    }
+
+    public List<Runnable> getTaskList() {
+        return taskList;
+    }
+
+    public Future<?> getFutureTask() {
+        return futureTask;
+    }
+
+    /**
      */
-	public void startReconnectionThread() {
-		synchronized (reconnection) {
-			if (!reconnection.isAlive()) {
-				reconnection.setName("Xmpp Reconnection Thread");
-				reconnection.start();
-			}
-		}
-	}
+    public void runTask() {
+        Log.i(LOGTAG, "runTask()...");
+        synchronized (taskList) {
+            running = false;
+            futureTask = null;
+            if (!taskList.isEmpty()) {
+                Runnable runnable = (Runnable) taskList.get(0);
+                taskList.remove(0);
+                running = true;
+                futureTask = taskSubmitter.submit(runnable);
+                if (futureTask == null) {
+                    taskTracker.decrease();
+                }
+            }
+        }
+        taskTracker.decrease();
+        Log.d(LOGTAG, "runTask()...done");
+    }
 
-	public Handler getHandler() {
-		return handler;
-	}
+    /**
+     * @return
+     */
+    private String newRandomUUID() {
+        String uuidRaw = UUID.randomUUID().toString();
+        return uuidRaw.replaceAll("-", "");
+    }
 
-	public void reregisterAccount() {
-		removeAccount();
-		submitLoginTask();
-		runTask();
-	}
+    /**
+     *
+     * @return  true if registered
+     */
 
-	public List<Runnable> getTaskList() {
-		return taskList;
-	}
+    private boolean isRegistered() {
 
-	public Future<?> getFutureTask() {
-		return futureTask;
-	}
+        String username = sharedPrefs.getString(Constants.XMPP_USERNAME, "");
+        String password = sharedPrefs.getString(Constants.XMPP_PASSWORD, "");
 
-	/**
-    */
-	public void runTask() {
-		Log.i(LOGTAG, "runTask()...");
-		synchronized (taskList) {
-			running = false;
-			futureTask = null;
-			if (!taskList.isEmpty()) {
-				Runnable runnable = (Runnable) taskList.get(0);
-				taskList.remove(0);
-				running = true;
-				futureTask = taskSubmitter.submit(runnable);
-				if (futureTask == null) {
-					taskTracker.decrease();
-				}
-			}
-		}
-		taskTracker.decrease();
-		Log.d(LOGTAG, "runTask()...done");
-	}
+        if (username.length() > 0 && password.length() > 0) {
+            return true;
+        }
 
-	/**
-	 * @return
-	 */
-	private String newRandomUUID() {
-		String uuidRaw = UUID.randomUUID().toString();
-		return uuidRaw.replaceAll("-", "");
-	}
-	
-	/**
-	 * 
-	 * @return  true if registered
-	 */
-	
-	private boolean isRegistered() {
+        return false;
 
-		String username = sharedPrefs.getString(Constants.XMPP_USERNAME, "");
-		String password = sharedPrefs.getString(Constants.XMPP_PASSWORD, "");
-
-		if (username.length() > 0 && password.length() > 0) {
-			return true;
-		}
-		
-		return false;
-		
-//		return sharedPrefs.contains(Constants.XMPP_USERNAME) && 
+//		return sharedPrefs.contains(Constants.XMPP_USERNAME) &&
 //				sharedPrefs.contains(Constants.XMPP_PASSWORD);
-	}
-	
-	private boolean isAuthenticated() {
-		return connection != null && connection.isConnected()
-				&& connection.isAuthenticated();
-	}
+    }
 
-	private void addTask(Runnable runnable) {
-		Log.d(LOGTAG, "addTask(runnable)... running: " + running);
-		taskTracker.increase();
-		synchronized (taskList) {
-			if (taskList.isEmpty() && !running) {
-				Log.d(LOGTAG,
-						"addTask(runnable)... taskList.isEmpty() && !running");
-				running = true;
-				futureTask = taskSubmitter.submit(runnable);
-				if (futureTask == null) {
-					taskTracker.decrease();
-				}
-			} else {
-				taskList.add(runnable);
-			}
-		}
-		Log.d(LOGTAG, "addTask(runnable)... done");
-	}
+    private boolean isAuthenticated() {
+        return connection != null && connection.isConnected()
+                && connection.isAuthenticated();
+    }
 
-	private void removeAccount() {
-		Editor editor = sharedPrefs.edit();
-		editor.remove(Constants.XMPP_USERNAME);
-		editor.remove(Constants.XMPP_PASSWORD);
-		editor.commit();
-	}
+    private void addTask(Runnable runnable) {
+        Log.d(LOGTAG, "addTask(runnable)... running: " + running);
+        taskTracker.increase();
+        synchronized (taskList) {
+            if (taskList.isEmpty() && !running) {
+                Log.d(LOGTAG,
+                        "addTask(runnable)... taskList.isEmpty() && !running");
+                running = true;
+                futureTask = taskSubmitter.submit(runnable);
+                if (futureTask == null) {
+                    taskTracker.decrease();
+                }
+            } else {
+                taskList.add(runnable);
+            }
+        }
+        Log.d(LOGTAG, "addTask(runnable)... done");
+    }
 
-	/**
-	 * A runnable task to connect the server. connection.connect();
-	 */
-	private class ConnectTask implements Runnable {
+    private void removeAccount() {
+        Editor editor = sharedPrefs.edit();
+        editor.remove(Constants.XMPP_USERNAME);
+        editor.remove(Constants.XMPP_PASSWORD);
+        editor.commit();
+    }
 
-		final XmppManager xmppManager;
+    /**
+     * A runnable task to connect the server. connection.connect();
+     */
+    private class ConnectTask implements Runnable {
 
-		private ConnectTask() {
-			this.xmppManager = XmppManager.this;
-			Log.i(LOGTAG, "ConnectTask.run()...");
+        final XmppManager xmppManager;
 
-		}
+        private ConnectTask() {
+            this.xmppManager = XmppManager.this;
+            Log.i(LOGTAG, "ConnectTask.run()...");
 
-		public void run() {
-			Log.i(LOGTAG, "ConnectTask.run()...");
+        }
 
-			if (!xmppManager.isConnected()) {
-				// Create the configuration for this new connection
-				/**
-            	 */
-				ConnectionConfiguration connConfig = new ConnectionConfiguration(xmppHost, xmppPort);
-				connConfig.setCompressionEnabled(false);
-				connConfig.setSecurityMode(SecurityMode.enabled);
-				connConfig.setSocketFactory(new XmppSocketFactory());
-				connConfig.setDebuggerEnabled(true);
-				
-		        try {
-		            SSLContext sc = SSLContext.getInstance("TLS");
-		            sc.init(null, MemorizingTrustManager.getInstanceList(context), new SecureRandom());
-		            connConfig.setCustomSSLContext(sc);
-		        } catch (NoSuchAlgorithmException e) {
-		        	Log.e(tag, "NoSuchAlgorithmException"+e.getMessage());
-		            throw new IllegalStateException(e);
-		        } catch (KeyManagementException e) {
-		            throw new IllegalStateException(e);
-		        }
-		        
-				XMPPConnection connection = new XMPPConnection(connConfig);
-				xmppManager.setConnection(connection);
+        public void run() {
+            Log.i(LOGTAG, "ConnectTask.run()...");
 
-				try {
-					
-					// Connect to the server
-					connection.connect();
-					Log.i(LOGTAG, "XMPP connected successfully");
+            if (!xmppManager.isConnected()) {
+                // Create the configuration for this new connection
+                /**
+                 */
+                ConnectionConfiguration connConfig = new ConnectionConfiguration(xmppHost, xmppPort);
+                connConfig.setCompressionEnabled(false);
+                connConfig.setSecurityMode(SecurityMode.enabled);
+                connConfig.setSocketFactory(new XmppSocketFactory());
+                connConfig.setDebuggerEnabled(true);
 
-					// packet provider
-					/** 
-					 * adding Configuration
+                try {
+                    SSLContext sc = SSLContext.getInstance("TLS");
+                    sc.init(null, MemorizingTrustManager.getInstanceList(context), new SecureRandom());
+                    connConfig.setCustomSSLContext(sc);
+                } catch (NoSuchAlgorithmException e) {
+                    Log.e(tag, "NoSuchAlgorithmException"+e.getMessage());
+                    throw new IllegalStateException(e);
+                } catch (KeyManagementException e) {
+                    throw new IllegalStateException(e);
+                }
+
+                XMPPConnection connection = new XMPPConnection(connConfig);
+                xmppManager.setConnection(connection);
+
+                try {
+
+                    // Connect to the server
+                    connection.connect();
+                    Log.i(LOGTAG, "XMPP connected successfully");
+
+                    // packet provider
+                    /**
+                     * adding Configuration
                      */
-			      configureProviderManager(connection);
+                    configureProviderManager(connection);
 
-				} catch (XMPPException e) {
-					Log.e(LOGTAG, "XMPP connection failed", e);
-					running = false;
-				}
+                } catch (XMPPException e) {
+                    Log.e(LOGTAG, "XMPP connection failed", e);
+                    running = false;
+                }
                 catch (Exception e){
                     running = false;
                     Log.e(LOGTAG, "XMPP connection failed", e);
                 }
 
-				xmppManager.runTask();
+                xmppManager.runTask();
 
-			} else {
-				Log.i(LOGTAG, "XMPP connected already");
-				xmppManager.runTask();
-			}
-		}
-	}
+            } else {
+                Log.i(LOGTAG, "XMPP connected already");
+                xmppManager.runTask();
+            }
+        }
+    }
 
-	/**
-	 * A runnable task to register a new user onto the server.
-	 */
-	private class RegisterTask implements Runnable {
-		final XmppManager xmppManager;
+    /**
+     * A runnable task to register a new user onto the server.
+     */
+    private class RegisterTask implements Runnable {
+        final XmppManager xmppManager;
 
-		private RegisterTask() {
-			xmppManager = XmppManager.this;
-		}
+        private RegisterTask() {
+            xmppManager = XmppManager.this;
+        }
 
-		public void run() {
-			Log.i(LOGTAG, "RegisterTask.run()...");
-			if (!xmppManager.isRegistered()) {
+        public void run() {
+            Log.i(LOGTAG, "RegisterTask.run()...");
+            if (!xmppManager.isRegistered()) {
 
-				final String newUsername = new SessionManager(context).getUserDetails().getPhone();
-				final String newPassword = newRandomUUID();
-				Registration registration = new Registration();
+                final String newUsername = new SessionManager(context).getUserDetails().getPhone();
+                final String newPassword = newRandomUUID();
+                Registration registration = new Registration();
 
-				PacketFilter packetFilter = new AndFilter(new PacketIDFilter(registration.getPacketID()), new PacketTypeFilter(IQ.class));
+                PacketFilter packetFilter = new AndFilter(new PacketIDFilter(registration.getPacketID()), new PacketTypeFilter(IQ.class));
 
-				PacketListener packetListener = new PacketListener() {
-					public void processPacket(Packet packet) {
-						Log.d("RegisterTask.PacketListener","processPacket().....");
-						Log.d("RegisterTask.PacketListener","packet=" + packet.toXML());
+                PacketListener packetListener = new PacketListener() {
+                    public void processPacket(Packet packet) {
+                        Log.d("RegisterTask.PacketListener","processPacket().....");
+                        Log.d("RegisterTask.PacketListener","packet=" + packet.toXML());
 
-						if (packet instanceof IQ) {
-							IQ response = (IQ) packet;
-							if (response.getType() == IQ.Type.ERROR) {
-								if (!response.getError().toString()
-										.contains("409")) {
-									Log.e(LOGTAG,
-											"Unknown error while registering XMPP account! "
-													+ response.getError()
-															.getCondition());
-								}
-							} else if (response.getType() == IQ.Type.RESULT) {
-								xmppManager.setUsername(newUsername);
-								xmppManager.setPassword(newPassword);
-								Log.d(LOGTAG, "username=" + newUsername);
-								Log.d(LOGTAG, "password=" + newPassword);
+                        if (packet instanceof IQ) {
+                            IQ response = (IQ) packet;
+                            if (response.getType() == IQ.Type.ERROR) {
+                                if (!response.getError().toString()
+                                        .contains("409")) {
+                                    Log.e(LOGTAG,
+                                            "Unknown error while registering XMPP account! "
+                                                    + response.getError()
+                                                    .getCondition());
+                                }
+                            } else if (response.getType() == IQ.Type.RESULT) {
+                                xmppManager.setUsername(newUsername);
+                                xmppManager.setPassword(newPassword);
+                                Log.d(LOGTAG, "username=" + newUsername);
+                                Log.d(LOGTAG, "password=" + newPassword);
 
-								Editor editor = sharedPrefs.edit();
-								editor.putString(Constants.XMPP_USERNAME,newUsername);
-								editor.putString(Constants.XMPP_PASSWORD,newPassword);
-								editor.commit();
-								Log.i(LOGTAG, "Account registered successfully");
-								xmppManager.runTask();
-							}
-						}
-					}
-				};
-				connection.addPacketListener(packetListener, packetFilter);
-				registration.setType(IQ.Type.SET);
-				
+                                Editor editor = sharedPrefs.edit();
+                                editor.putString(Constants.XMPP_USERNAME,newUsername);
+                                editor.putString(Constants.XMPP_PASSWORD,newPassword);
+                                editor.commit();
+                                Log.i(LOGTAG, "Account registered successfully");
+                                xmppManager.runTask();
+                            }
+                        }
+                    }
+                };
+                connection.addPacketListener(packetListener, packetFilter);
+                registration.setType(IQ.Type.SET);
+
 				/* PLESSE REMOVE THIS COMMENTS */
-				registration.addAttribute("username", newUsername);
-				registration.addAttribute("password", newPassword);
-				registration.addAttribute("imsi", "460000001232300");
-				registration.addAttribute("imei", "324234343434434");
-				
-				
-				connection.sendPacket(registration);
-			} else {
-				Log.i(LOGTAG, "Account registered already");
-				xmppManager.runTask();
-			}
-		}
-	}
+                registration.addAttribute("username", newUsername);
+                registration.addAttribute("password", newPassword);
+                registration.addAttribute("imsi", "460000001232300");
+                registration.addAttribute("imei", "324234343434434");
 
-	/**
-	 * /** A runnable task to log into the server.
-	 */
-	private class LoginTask implements Runnable {
 
-		final XmppManager xmppManager;
+                connection.sendPacket(registration);
+            } else {
+                Log.i(LOGTAG, "Account registered already");
+                xmppManager.runTask();
+            }
+        }
+    }
 
-		private LoginTask() {
-			this.xmppManager = XmppManager.this;
-			Log.i(LOGTAG, "********LoginTask.Started********");
-		}
+    /**
+     * /** A runnable task to log into the server.
+     */
+    private class LoginTask implements Runnable {
 
-		public void run() {
-			
-			Log.i(LOGTAG, "******** Login Process ******");
-			
-			if (!xmppManager.isAuthenticated()) {
-				String username = sharedPrefs.getString(Constants.XMPP_USERNAME, "");
-				String password = sharedPrefs.getString(Constants.XMPP_PASSWORD, "");
-				
-				xmppManager.setUsername(username);
-				xmppManager.setPassword(password);
-				Log.d(LOGTAG, "username=" + username);
-				Log.d(LOGTAG, "password=" + password);
-				
-				Log.i(LOGTAG,"trying login user : " + xmppManager.getUsername());
+        final XmppManager xmppManager;
 
-				try {
-					xmppManager.getConnection().
-					    login(
-							xmppManager.getUsername(),
-							xmppManager.getPassword(),
-							XMPP_RESOURCE_NAME);
-					
-					Log.d(LOGTAG, "Loggedn in successfully to host "+ connection.getHost());
-					
-					// connection listener
-					/**
+        private LoginTask() {
+            this.xmppManager = XmppManager.this;
+            Log.i(LOGTAG, "********LoginTask.Started********");
+        }
+
+        public void run() {
+
+            Log.i(LOGTAG, "******** Login Process ******");
+
+            if (!xmppManager.isAuthenticated()) {
+                String username = sharedPrefs.getString(Constants.XMPP_USERNAME, "");
+                String password = sharedPrefs.getString(Constants.XMPP_PASSWORD, "");
+
+                xmppManager.setUsername(username);
+                xmppManager.setPassword(password);
+                Log.d(LOGTAG, "username=" + username);
+                Log.d(LOGTAG, "password=" + password);
+
+                Log.i(LOGTAG,"trying login user : " + xmppManager.getUsername());
+
+                try {
+                    xmppManager.getConnection().
+                            login(
+                                    xmppManager.getUsername(),
+                                    xmppManager.getPassword(),
+                                    XMPP_RESOURCE_NAME);
+
+                    Log.d(LOGTAG, "Loggedn in successfully to host "+ connection.getHost());
+
+                    // connection listener
+                    /**
                      */
-					if (xmppManager.getConnectionListener() != null) {
-						xmppManager.getConnection().addConnectionListener(
-								xmppManager.getConnectionListener());
-					}
-					
-					//fileTransfer Listener 
-					addFileListener();
+                    if (xmppManager.getConnectionListener() != null) {
+                        xmppManager.getConnection().addConnectionListener(
+                                xmppManager.getConnectionListener());
+                    }
 
-					// packet filter
-					/**
+                    //FileTransfer Listener
+                    addFileListener();
+
+                    // Subscription Listener
+                    setSubscription();
+
+                    // packet filter
+
+                    PacketFilter packetFilter = new PacketTypeFilter(NotificationIQ.class);
+                    PacketFilter filter = new MessageTypeFilter(Message.Type.chat);
+
+                    // packet listener
+                    /**
                      */
-					PacketFilter packetFilter = new PacketTypeFilter(
-							NotificationIQ.class);
-					
-					PacketFilter filter = new MessageTypeFilter(
-							Message.Type.chat);
+                    connection.addPacketListener(new MessagePacketListener(getContext(),getConnection()),new MessagePacketFilter());
+                    PacketListener packetListener = xmppManager.getNotificationPacketListener();
+                    connection.addPacketListener(packetListener, filter);
+                    connection.getRoster().addRosterListener(new BuddyListener(getContext()));
+                    xmppManager.runTask();
 
-					// packet listener
-					/**
+                } catch (XMPPException e) {
+                    Log.e(LOGTAG, "LoginTask.run()... xmpp error");
+                    Log.e(LOGTAG, "Failed to login to xmpp server. Caused by: "
+                            + e.getMessage());
+                    /**
                      */
-					connection.addPacketListener(new MessagePacketListener(getContext(),getConnection()),new MessagePacketFilter());
-					PacketListener packetListener = xmppManager.getNotificationPacketListener();
-					connection.addPacketListener(packetListener, filter);
-					connection.getRoster().addRosterListener(new BuddyListener(getContext()));
-					xmppManager.runTask();
-
-				} catch (XMPPException e) {
-					Log.e(LOGTAG, "LoginTask.run()... xmpp error");
-					Log.e(LOGTAG, "Failed to login to xmpp server. Caused by: "
-							+ e.getMessage());
-					/**
+                    String INVALID_CREDENTIALS_ERROR_CODE = "401";
+                    String errorMessage = e.getMessage();
+                    /**
                      */
-					String INVALID_CREDENTIALS_ERROR_CODE = "401";
-					String errorMessage = e.getMessage();
-					/**
-                     */
-					if (errorMessage != null
-							&& errorMessage
-									.contains(INVALID_CREDENTIALS_ERROR_CODE)) {
-						xmppManager.reregisterAccount();
-						return;
-					}
-					xmppManager.startReconnectionThread();
+                    if (errorMessage != null
+                            && errorMessage
+                            .contains(INVALID_CREDENTIALS_ERROR_CODE)) {
+                        xmppManager.reRegisterAccount();
+                        return;
+                    }
+                    xmppManager.startReconnectionThread();
 
-				} catch (Exception e) {
-					Log.e(LOGTAG, "LoginTask.run()... other error");
-					Log.e(LOGTAG, "Failed to login to xmpp server. Caused by: "
-							+ e.getMessage());
-					xmppManager.startReconnectionThread();
-				}
+                } catch (Exception e) {
+                    Log.e(LOGTAG, "LoginTask.run()... other error");
+                    Log.e(LOGTAG, "Failed to login to xmpp server. Caused by: "
+                            + e.getMessage());
+                    xmppManager.startReconnectionThread();
+                }
 
-			} else {
-				Log.i(LOGTAG, "Logged in already");
-				xmppManager.runTask();
-			}
+            } else {
+                Log.i(LOGTAG, "Logged in already");
+                xmppManager.runTask();
+            }
 
-		}
-	}
+        }
+    }
 
-	/*****************************************************
-	 * 
-	 *****************************************************
-	 */
-	
-   public void addFriend(String userID,String userNickname) {
-    	
+    /*****************************************************
+     *
+     *****************************************************
+     */
+
+    public void addFriend(String userID,String userNickname) {
+
         Roster roster = null;
-        Roster.setDefaultSubscriptionMode(Roster.SubscriptionMode.accept_all);    	
+        //Roster.setDefaultSubscriptionMode(Roster.SubscriptionMode.accept_all);
         String nickname = userNickname;
         //nickname = StringUtils.parseBareAddress(userID);
         roster = connection.getRoster();
         if (!roster.contains(userID)) {
-                try {
-					roster.createEntry(userID, nickname, null);
-				} catch (XMPPException e) {
-					e.printStackTrace();
-				}
+            try {
+                roster.createEntry(userID, nickname, null);
+            } catch (XMPPException e) {
+                e.printStackTrace();
+            }
         }
 
         return;
     }
 
-   public void login(String userID, String password) throws BadConnectionException {
-	   
-	
-    	// Create a connection
-		ConnectionConfiguration connConfig = new ConnectionConfiguration(xmppHost, xmppPort, XMPP_RESOURCE_NAME);
-		connConfig.setSASLAuthenticationEnabled(true);
-		connConfig.setCompressionEnabled(false);
-		connConfig.setSecurityMode(SecurityMode.enabled);
-		connConfig.setSocketFactory(new XmppSocketFactory());
-		
+    public void login(String userID, String password) throws BadConnectionException {
+
+
+        // Create a connection
+        ConnectionConfiguration connConfig = new ConnectionConfiguration(xmppHost, xmppPort, XMPP_RESOURCE_NAME);
+        connConfig.setSASLAuthenticationEnabled(true);
+        connConfig.setCompressionEnabled(false);
+        connConfig.setSecurityMode(SecurityMode.enabled);
+        connConfig.setSocketFactory(new XmppSocketFactory());
+
         try {
             SSLContext sc = SSLContext.getInstance("TLS");
             sc.init(null, MemorizingTrustManager.getInstanceList(context), new SecureRandom());
             connConfig.setCustomSSLContext(sc);
         } catch (NoSuchAlgorithmException e) {
-        	Log.e(tag, "NoSuchAlgorithmException"+e.getMessage());
+            Log.e(tag, "NoSuchAlgorithmException"+e.getMessage());
             throw new IllegalStateException(e);
         } catch (KeyManagementException e) {
             throw new IllegalStateException(e);
         }
-        
-		
+
+
 	/*	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			connConfig.setTruststoreType("AndroidCAStore");
 			connConfig.setTruststorePassword(null);
@@ -734,25 +734,25 @@ public class XmppManager implements GenericConnection {
 			            + "cacerts.bks";
 			    connConfig.setTruststorePath(path);
 			}*/
-		
-		configure(ProviderManager.getInstance());
-		this.connection = new XMPPConnection(connConfig);
-		
-		try {
-			this.connection.connect();
-			Log.i(tag,"Connected to " + connection.getHost());
-		} catch (XMPPException ex) {
-			Log.e(tag, "Failed to connect to "+ connection.getHost());
-			Log.e(tag, ex.toString());
-		}
-		
-		try {
-			this.connection.login(userID, password);
-			Log.i(tag,"Logged in as " + connection.getUser());
-		} catch (XMPPException e1) {
-			e1.printStackTrace();
+
+        configure(ProviderManager.getInstance());
+        this.connection = new XMPPConnection(connConfig);
+
+        try {
+            this.connection.connect();
+            Log.i(tag,"Connected to " + connection.getHost());
+        } catch (XMPPException ex) {
+            Log.e(tag, "Failed to connect to "+ connection.getHost());
+            Log.e(tag, ex.toString());
+        }
+
+        try {
+            this.connection.login(userID, password);
+            Log.i(tag,"Logged in as " + connection.getUser());
+        } catch (XMPPException e1) {
+            e1.printStackTrace();
             Log.e(tag, "Error signing into Jabber!\nUser name and password do not match." );
-		}
+        }
         // Setup the listeners for messages and buddy changes
         connection.addPacketListener(new MessagePacketListener(getContext(),getConnection()),new MessagePacketFilter());
         connection.getRoster().addRosterListener(new BuddyListener(getContext()));
@@ -780,15 +780,16 @@ public class XmppManager implements GenericConnection {
     }
 
     public void changeStatus(UserStateType state, String status) {
+
         Presence presence = new Presence(Presence.Type.available);
         if (state == UserStateType.ONLINE) {
-            presence.setMode(Presence.Mode.available);
+            presence.setMode(Mode.available);
         } else if (state == UserStateType.AWAY) {
-            presence.setMode(Presence.Mode.away);
+            presence.setMode(Mode.away);
         } else if (state == UserStateType.BUSY) {
-            presence.setMode(Presence.Mode.dnd);
+            presence.setMode(Mode.dnd);
         } else {
-            presence.setMode(Presence.Mode.chat);
+            presence.setMode(Mode.chat);
         }
         presence.setStatus(status);
         connection.sendPacket(presence);
@@ -802,7 +803,7 @@ public class XmppManager implements GenericConnection {
         try {
             userStatus = this.connection.getRoster().getPresence(userID).getStatus();
         } catch (NullPointerException e) {
-         //Invalid connection or user status
+            //Invalid connection or user status
             userStatus = "";
         }
         // Server may set their status to null; we want empty string
@@ -812,93 +813,91 @@ public class XmppManager implements GenericConnection {
 
         return userStatus;
     }
-    
+
     public VCard getUserVCard( String userId ){
-    	
-    	 VCard vCard = new VCard();
-    	 try {
-			vCard.load(connection, userId);
-		} catch (XMPPException e) {
-			e.printStackTrace();
-		}
-    	 return vCard;
+
+        VCard vCard = new VCard();
+        try {
+            vCard.load(connection, userId);
+        } catch (XMPPException e) {
+            e.printStackTrace();
+        }
+        return vCard;
     }
-    
+
     public VCard getVcard(){
-    	 
-	    try {
-	        vcard.load(connection);
-		} catch (XMPPException e) {
-			e.printStackTrace();
-		}
-	     return vcard; 
-     }
-    
+
+        try {
+            vcard.load(connection);
+        } catch (XMPPException e) {
+            e.printStackTrace();
+        }
+        return vcard;
+    }
+
     public void getRosterPresence(){
-    	
-    	Roster roster = null;
+
+        Roster roster = null;
         roster = this.connection.getRoster();
-    	for(RosterEntry r:roster.getEntries()) {
+        for(RosterEntry r:roster.getEntries()) {
             Presence presence = roster.getPresence(r.getUser());
             System.out.println(presence.toXML());
         }
     }
 
-    
-     /**
-      * Save user information.
-     * @throws XMPPException 
-      */
-     public void setUserInfo (String firstName,String lastName){
-    	 
-    	 try {
-    	     vcard.load(connection);
-		} catch (XMPPException e1) {
-			Log.e(tag, e1.getMessage());
-		}
-    	 
-    	 vcard.setFirstName(firstName);
-    	 vcard.setLastName(lastName);
-    	// vcard.setAddressFieldHome("STREET", "Some street");
-    	// vcard.setAddressFieldWork("CTRY", "US");
-    	 //vcard.setPhoneWork("FAX", "3443233");
-    	 
-    	 try {
-    		 Log.d(tag, "saving vCard...");
-			vcard.save(connection);
-		} catch (XMPPException e) {
-			Log.e(tag, e.getMessage());
-		}
 
-     }
-     
-     
-     
-     /**
-      * Set the avatar for the VCard by specifying the url to the image.
-      *
-      * @param avatarURL
-      *            the url to the image(png,jpeg,gif,bmp)
-      * @throws XMPPException
-      */
-     public void setAvatarPicture(URL avatarURL) throws XMPPException {
-        
-     	byte[] bytes = new byte[0];
-         try {
-             bytes = getBytes(avatarURL);
-         } catch (IOException e) {
-             e.printStackTrace();
-         }
+    /**
+     * Save user information.
+     * @throws org.jivesoftware.smack.XMPPException
+     */
+    public void setUserInfo (String firstName,String lastName){
 
-         setAvatarPicture(bytes);
-     }
+        try {
+            vcard.load(connection);
+        } catch (XMPPException e1) {
+            Log.e(tag, e1.getMessage());
+        }
+
+        vcard.setFirstName(firstName);
+        vcard.setLastName(lastName);
+        // vcard.setAddressFieldHome("STREET", "Some street");
+        // vcard.setAddressFieldWork("CTRY", "US");
+        //vcard.setPhoneWork("FAX", "3443233");
+
+        try {
+            Log.d(tag, "saving vCard...");
+            vcard.save(connection);
+        } catch (XMPPException e) {
+            Log.e(tag, e.getMessage());
+        }
+
+    }
+
+    /**
+     * Set the avatar for the VCard by specifying the url to the image.
+     *
+     * @param avatarURL
+     *            the url to the image(png,jpeg,gif,bmp)
+     * @throws org.jivesoftware.smack.XMPPException
+     */
+    public void setAvatarPicture(URL avatarURL) throws XMPPException {
+
+        byte[] bytes = new byte[0];
+        try {
+            bytes = getBytes(avatarURL);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        setAvatarPicture(bytes);
+    }
 
     /**
      * Specify the bytes for the avatar to use.
      *
      * @param file
      *            the bytes of the avatar.
-     * @throws XMPPException
+     * @throws org.jivesoftware.smack.XMPPException
      */
     public void setAvatarPicture(File file) throws XMPPException {
         vcard = new VCard();
@@ -926,10 +925,10 @@ public class XmppManager implements GenericConnection {
      *
      * @param bytes
      *            the bytes of the avatar.
-     * @throws XMPPException
+     * @throws org.jivesoftware.smack.XMPPException
      */
     public void setAvatarPicture(byte[] bytes) throws XMPPException {
-    	
+
         vcard.load(connection);
         String encodedImage = StringUtils.encodeBase64(bytes);
         vcard.setField("Avatar", "<TYPE>image/jpg</TYPE><BINVAL>" + encodedImage + "</BINVAL>", true);
@@ -971,29 +970,29 @@ public class XmppManager implements GenericConnection {
     }
 
     public byte[] getAvatarPicture(String userID) throws XMPPException {
-    	    	
-         byte[] avatarBytes;
-            vcard.load(connection, userID); // load someone's VCard
-            Log.i("MyVCard", vcard.toXML().toString());
-        	avatarBytes  = vcard.getAvatar();
-          
+
+        byte[] avatarBytes;
+        vcard.load(connection, userID); // load someone's VCard
+        Log.i("MyVCard", vcard.toXML().toString());
+        avatarBytes  = vcard.getAvatar();
+
         return avatarBytes;
     }
 
     public UserStateType retrieveState(String userID) {
-    	
+
         UserStateType userState = UserStateType.OFFLINE; // default return value
         Presence userFromServer = null;
         Mode userStateFromServer = null;
-        
+
         try {
             userFromServer = this.connection.getRoster().getPresence(userID);
             userStateFromServer = userFromServer.getMode();
 
-            if (userStateFromServer == Presence.Mode.dnd) {
+            if (userStateFromServer == Mode.dnd) {
                 userState = UserStateType.BUSY;
-            } else if (userStateFromServer == Presence.Mode.away
-                    || userStateFromServer == Presence.Mode.xa) {
+            } else if (userStateFromServer == Mode.away
+                    || userStateFromServer == Mode.xa) {
                 userState = UserStateType.AWAY;
             } else if (userFromServer.isAvailable()) {
                 userState = UserStateType.ONLINE;
@@ -1008,8 +1007,8 @@ public class XmppManager implements GenericConnection {
         return userState;
     }
 
-    public ArrayList<FriendTempData> retrieveFriendList() {
-    	
+    public ArrayList<FriendTempData> retrieveFriendList() throws XMPPException{
+
         ArrayList<FriendTempData> friends = new ArrayList<FriendTempData>();
         FriendTempData friendToAdd = null;
         String userID = null;
@@ -1019,10 +1018,15 @@ public class XmppManager implements GenericConnection {
 
         for (RosterEntry r : roster.getEntries()) {
             userID = r.getUser();
-            
-            if (r.getName().length() < 1) {
-				r.setName(userID);
-			}
+
+            try {
+                if (r.getName() == null || r.getName().length() < 1) {
+                    r.setName(StringUtils.parseName(userID));
+                }
+            }catch (Exception e){
+                r.setName(StringUtils.parseName(userID));
+            }
+
             friendToAdd =
                     new FriendTempData(userID, r.getName(), this
                             .retrieveStatus(userID),
@@ -1033,7 +1037,7 @@ public class XmppManager implements GenericConnection {
     }
 
     public void sendMessage(String toUserID, String message)
-    
+
             throws BadConnectionException {
         Chat ourChat = null;
 
@@ -1049,7 +1053,7 @@ public class XmppManager implements GenericConnection {
                     connection.getChatManager().createChat(toUserID,
                             new MessageListener() {
                                 public void processMessage(Chat chat,
-                                        Message message) {
+                                                           Message message) {
                                     // Do nothing
 
                                     return;
@@ -1067,8 +1071,6 @@ public class XmppManager implements GenericConnection {
         return;
     }
 
-    // Section
-    // Listeners
     private class MessagePacketFilter implements PacketFilter {
         public boolean accept(Packet packet) {
             // TODO Is this the source of the name is null bug? check
@@ -1078,6 +1080,73 @@ public class XmppManager implements GenericConnection {
         }
     }
 
+    /**
+     * This PacketListener will set a notification when you got a subscription request.
+     * @author Faris <faris.it.cs@gmail.com>
+     */
+    private class SubscribePacketListener implements PacketListener {
+
+        /**
+         * Constructor.
+         */
+        public SubscribePacketListener() {
+
+        }
+        @Override
+        public void processPacket(Packet packet) {
+            if (!(packet instanceof Presence))
+                return;
+            Presence p = (Presence) packet;
+            if (p.getType() != Presence.Type.subscribe)
+                return;
+            String from = p.getFrom();
+
+            Log.d(tag,"SubscribePacketListener  from: "+from);
+            Toast.makeText(context,"",Toast.LENGTH_LONG).show();
+
+            if( context instanceof Activity) {
+                Log.d(tag,"context is Activity");
+            } else {
+                Log.d(tag,"context is not Activity ");
+            }
+
+            /*
+            Notification notification = new Notification(android.R.drawable.stat_notify_more, mService.getString(
+                    R.string.AcceptContactRequest, from), System.currentTimeMillis());
+            notification.flags = Notification.FLAG_AUTO_CANCEL;
+            Intent intent = new Intent(mService, Subscription.class);
+            intent.setData(Contact.makeXmppUri(from));
+            notification.setLatestEventInfo(mService, from, mService
+                    .getString(R.string.AcceptContactRequestFrom, from), PendingIntent.getActivity(mService, 0,
+                    intent, PendingIntent.FLAG_ONE_SHOT));
+            int id = p.hashCode();
+            mService.sendNotification(id, notification);
+            */
+        }
+    }
+
+    public void setSubscription(){
+
+        /*
+        PacketFilter subscribeFilter = new PacketFilter() {
+            @Override
+            public boolean accept(Packet packet) {
+                if (packet instanceof Presence) {
+                    Presence pres = (Presence) packet;
+                    if (pres.getType() == Presence.Type.subscribe)
+                        return true;
+                }
+                return false;
+            }
+        };
+
+        Roster roster = connection.getRoster();
+        roster.setSubscriptionMode(Roster.SubscriptionMode.manual);
+        //roster.addRosterListener(new RosterListenerImpl());
+        PacketListener subscribePacketListener = new SubscribePacketListener();
+        connection.addPacketListener(subscribePacketListener, subscribeFilter);
+        */
+    }
 
     @Override
     public int hashCode() {
@@ -1105,7 +1174,7 @@ public class XmppManager implements GenericConnection {
                     connection.getChatManager().createChat(userID,
                             new DefaultChatStateListener());
         }
-        
+
         if (state == 1) {
             curState.setCurrentState(ChatState.active, lastChat);
         } else if (state == 2) {
@@ -1121,7 +1190,7 @@ public class XmppManager implements GenericConnection {
     }
 
     private class DefaultChatStateListener implements ChatStateListener {
-    	
+
         public void stateChanged(Chat user, ChatState event) {
             String state = event.name();
             TypingStateType typingState = null;
@@ -1136,66 +1205,66 @@ public class XmppManager implements GenericConnection {
             } else if (state.equals("gone")) {
                 typingState = TypingStateType.GONE;
             }
-           // controller.typingStateUpdated(genericConnection, typingState, user.getParticipant().toString());
+            // controller.typingStateUpdated(genericConnection, typingState, user.getParticipant().toString());
         }
 
         public void processMessage(Chat arg0, Message arg1) {
             // Do nothing
         }
     }
-    
+
     /**
-     * 
+     *
      * @param keyword
      * @param byUsername true if search by username
      * @param byName  true if search by name
-     * @throws XMPPException
-     * 
+     * @throws org.jivesoftware.smack.XMPPException
+     *
      */
     public void SearchUser(String keyword , boolean byUsername,boolean byName) throws XMPPException{
-    	
-    	 UserSearchManager search = new UserSearchManager(connection);
-         Form searchForm = search.getSearchForm("search." + connection.getServiceName());
 
-         Form answerForm = searchForm.createAnswerForm();
-         answerForm.setAnswer("search", keyword);
-         if (byUsername) {
-        	 answerForm.setAnswer("Username", true);
-		}else if (byName) {
-			answerForm.setAnswer("Name", true);
-		}
-        
-         ReportedData data = search.getSearchResults(answerForm, "search." + connection.getServiceName());
+        UserSearchManager search = new UserSearchManager(connection);
+        Form searchForm = search.getSearchForm("search." + connection.getServiceName());
 
-         System.out.println("\nThe jids from our each of our hits:");
+        Form answerForm = searchForm.createAnswerForm();
+        answerForm.setAnswer("search", keyword);
+        if (byUsername) {
+            answerForm.setAnswer("Username", true);
+        }else if (byName) {
+            answerForm.setAnswer("Name", true);
+        }
 
-         Iterator<Row> rows = data.getRows();
-         while (rows.hasNext()) 
-         {
+        ReportedData data = search.getSearchResults(answerForm, "search." + connection.getServiceName());
+
+        System.out.println("\nThe jids from our each of our hits:");
+
+        Iterator<Row> rows = data.getRows();
+        while (rows.hasNext())
+        {
             Row row = rows.next();
             Log.i(tag,row.toString());
             Iterator<String> jids = row.getValues("jid");
             while (jids.hasNext()) {
-               Log.i(tag,jids.next());
+                Log.i(tag,jids.next());
             }
-         }
+        }
     }
-    
+
     public Boolean checkIfUserExists(String user) throws XMPPException{
-    	
-        UserSearchManager search = new UserSearchManager(connection);  
+
+        UserSearchManager search = new UserSearchManager(connection);
         Form searchForm = search.getSearchForm("search."+connection.getServiceName());
-        Form answerForm = searchForm.createAnswerForm();  
-        answerForm.setAnswer("Username", true);  
-        answerForm.setAnswer("search", user);  
-        ReportedData data = search.getSearchResults(answerForm,"search."+connection.getServiceName());  
+        Form answerForm = searchForm.createAnswerForm();
+        answerForm.setAnswer("Username", true);
+        answerForm.setAnswer("search", user);
+        ReportedData data = search.getSearchResults(answerForm,"search."+connection.getServiceName());
         if (data.getRows() != null) {
             Iterator<Row> it = data.getRows();
             while (it.hasNext()) {
                 Row row = it.next();
                 Iterator iterator = row.getValues("jid");
                 if (iterator.hasNext()) {
-                   // String value = iterator.next().toString();
+                    // String value = iterator.next().toString();
                     //Log.i(tag,"Iteartor values...... " + value);
                     return true;
                 }
@@ -1203,45 +1272,45 @@ public class XmppManager implements GenericConnection {
         }
         return false;
     }
-    
+
     public void sampleSearch() throws XMPPException{
-    	
-    	ProviderManager.getInstance().addExtensionProvider("x", "jabber:x:data", new DataFormProvider());
-    	Log.i(tag,"sampleSearch ..."+connection.getServiceName());
+
+        ProviderManager.getInstance().addExtensionProvider("x", "jabber:x:data", new DataFormProvider());
+        Log.i(tag,"sampleSearch ..."+connection.getServiceName());
         UserSearchManager search = new UserSearchManager(connection);
         Form searchForm = search.getSearchForm("search." + connection.getServiceName());
-        
+
         Log.i(tag,"Available search fields:");
         Iterator<FormField> fields = searchForm.getFields();
-        
+
         while (fields.hasNext()) {
-           FormField field = fields.next();
-          Log.i(tag,field.getVariable() + " : " + field.getType());
+            FormField field = fields.next();
+            Log.i(tag,field.getVariable() + " : " + field.getType());
         }
-        
+
         Form answerForm = searchForm.createAnswerForm();
         Log.i(tag,"search"+ "a");
         answerForm.setAnswer("Email", true);
-        
+
         ReportedData data = search.getSearchResults(answerForm, "search." + connection.getServiceName());
-        
+
         Log.i(tag,"\nColumns that are included as part of the search results:");
         Iterator<Column> columns = data.getColumns();
         while (columns.hasNext()) {
-        	Log.i(tag,columns.next().getVariable());
+            Log.i(tag,columns.next().getVariable());
         }
-        
+
         Log.i(tag,"\nThe jids from our each of our hits:");
         Iterator<Row> rows = data.getRows();
         while (rows.hasNext()) {
-           Row row = rows.next();
-           
-           Iterator<String> jids = row.getValues("jid");
-           while (jids.hasNext()) {
-        	   Log.i(tag,jids.next());
-           }
+            Row row = rows.next();
+
+            Iterator<String> jids = row.getValues("jid");
+            while (jids.hasNext()) {
+                Log.i(tag,jids.next());
+            }
         }
-   }
+    }
 
     public String getUserEmailHome() throws XMPPException {
         // TODO Auto-generated method stub
@@ -1304,10 +1373,10 @@ public class XmppManager implements GenericConnection {
     }
 
     public void setUserEmailHome(String email) throws XMPPException {
-    	vcard.load(connection);
-    	vcard.setEmailHome(email);
-    	vcard.save(connection);
-    	
+        vcard.load(connection);
+        vcard.setEmailHome(email);
+        vcard.save(connection);
+
 
     }
 
@@ -1317,30 +1386,30 @@ public class XmppManager implements GenericConnection {
     }
 
     public void setUserFirstName(String name) throws XMPPException {
-    	vcard.load(connection);
-    	vcard.setFirstName(name);
-    	vcard.save(connection);
+        vcard.load(connection);
+        vcard.setFirstName(name);
+        vcard.save(connection);
 
     }
 
     public void setUserLastName(String name) throws XMPPException {
-    	vcard.load(connection);
-    	vcard.setLastName(name);
-    	vcard.save(connection);
+        vcard.load(connection);
+        vcard.setLastName(name);
+        vcard.save(connection);
 
     }
 
     public void setUserMiddleName(String name) throws XMPPException {
-    	vcard.load(connection);
-    	vcard.setMiddleName(name);
-    	vcard.save(connection);
+        vcard.load(connection);
+        vcard.setMiddleName(name);
+        vcard.save(connection);
 
     }
 
     public void setUserNickName(String name) throws XMPPException {
-    	vcard.load(connection);
-    	vcard.setNickName(name);
-    	vcard.save(connection);
+        vcard.load(connection);
+        vcard.setNickName(name);
+        vcard.save(connection);
     }
 
     public void setUserOrganization(String name) throws XMPPException {
@@ -1354,220 +1423,210 @@ public class XmppManager implements GenericConnection {
     }
 
     public void setUserPhoneHome(String phone) throws XMPPException {
-    	vcard.load(connection);
-    	vcard.setField("Home", phone);
-    	vcard.save(connection);
+        vcard.load(connection);
+        vcard.setField("Home", phone);
+        vcard.save(connection);
 
     }
 
     public void setUserPhoneWork(String phone) throws XMPPException {
-    	vcard.load(connection);
-    	vcard.setField("Work", phone);
-    	vcard.save(connection);
+        vcard.load(connection);
+        vcard.setField("Work", phone);
+        vcard.save(connection);
 
     }
     public void setField(String name , String data) throws XMPPException {
-    	vcard.load(connection);
-    	vcard.setField(name, data);
-    	vcard.save(connection);
+        vcard.load(connection);
+        vcard.setField(name, data);
+        vcard.save(connection);
 
     }
-   
-    public void addFileListener() {
-    	
-    	fileManager = new FileTransferManager(connection);
-    	fileManager.addFileTransferListener(new FileTransferListener() {
-		public void fileTransferRequest(final FileTransferRequest request) {
-	
-				new Thread() {
-					@Override
-					public void run() {
-						  File externalFileDir = Environment.
-		    	            		getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-						
-						IncomingFileTransfer transfer = request.accept();
-						final File saveTo = new File(externalFileDir,request.getFileName());
-						Log.i(tag,"File transfer: " + saveTo.getName() + " - "
-				    	    		+ request.getFileSize() / 1024 + " KB");
-						 try {
-		    	    			transfer.recieveFile(saveTo);
-		    	    			Log.i(tag,"File transfer: " + saveTo.getName() + " - "
-		    	    					+ transfer.getStatus());
-		    	    			double percents = 0.0;
-		    	    			while (!transfer.isDone()) {
-		    	    				if (transfer.getStatus().equals(Status.in_progress)) {
-		    	    					percents = ((int) (transfer.getProgress() * 10000)) / 100.0;
-		    	    					Log.d(tag,"File transfer: " + saveTo.getName() + " - "
-		    	    							+ percents + "%");
-		    	    				} else if (transfer.getStatus().equals(Status.error)) {
-		    	    					Log.e(tag,returnAndLogError(transfer));
-		    	    					return;
-		    	    				}
-		    	    				Thread.sleep(1000);
-		    	    			}
-		    	    			if (transfer.getStatus().equals(Status.complete)) {
-		    	    				Log.d(tag,"File transfer complete. File saved as "
-		    	    						+ saveTo.getAbsolutePath());
-		    	    				
-		    	    				/**
-		    	    				 * Notify MessageActivity
-		    	    				 */
-		    	    				FileRecieveNotfication notifier = new FileRecieveNotfication();
-		    	    				notifier.checkdata(getContext());
-		    	    				notifier.notifyMessageUI(request.getRequestor(), saveTo.getAbsolutePath());
-		    	    			} else {
-		    	    				Log.e(tag,returnAndLogError(transfer));
-		    	    			}
-		    	    		} catch (Exception ex) {
-		    	    			String message = "Cannot receive the file because an error occured during the process."
-		    	    					+ ex;
-		    	    			Log.e(tag, message, ex);
-		    	    			Log.i(tag,message);
-		    	    		}
-					};
-				}.start();
-			}
-		});
-    	
-    	
-	}
-    
-    public String returnAndLogError(FileTransfer transfer) {
-		String message = "Cannot process the file because an error occured during the process.";
 
-		if (transfer.getError() != null) {
-			message += transfer.getError();
-		}
-		if (transfer.getException() != null) {
-			message += transfer.getException();
-		}
-		return message;
-	}
+    public void addFileListener() {
+
+        fileManager = new FileTransferManager(connection);
+        fileManager.addFileTransferListener(new FileTransferListener() {
+            public void fileTransferRequest(final FileTransferRequest request) {
+
+                new Thread() {
+                    @Override
+                    public void run() {
+                        File externalFileDir = Environment.
+                                getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+
+                        IncomingFileTransfer transfer = request.accept();
+                        final File saveTo = new File(externalFileDir,request.getFileName());
+                        Log.i(tag,"File transfer: " + saveTo.getName() + " - "
+                                + request.getFileSize() / 1024 + " KB");
+                        try {
+                            transfer.recieveFile(saveTo);
+                            Log.i(tag,"File transfer: " + saveTo.getName() + " - "
+                                    + transfer.getStatus());
+                            double percents = 0.0;
+                            while (!transfer.isDone()) {
+                                if (transfer.getStatus().equals(Status.in_progress)) {
+                                    percents = ((int) (transfer.getProgress() * 10000)) / 100.0;
+                                    Log.d(tag,"File transfer: " + saveTo.getName() + " - "
+                                            + percents + "%");
+                                } else if (transfer.getStatus().equals(Status.error)) {
+                                    Log.e(tag,returnAndLogError(transfer));
+                                    return;
+                                }
+                                Thread.sleep(1000);
+                            }
+                            if (transfer.getStatus().equals(Status.complete)) {
+                                Log.d(tag,"File transfer complete. File saved as "
+                                        + saveTo.getAbsolutePath());
+
+                                /**
+                                 * Notify MessageActivity
+                                 */
+                                FileRecieveNotfication notifier = new FileRecieveNotfication();
+                                notifier.checkdata(getContext());
+                                notifier.notifyMessageUI(request.getRequestor(), saveTo.getAbsolutePath());
+                            } else {
+                                Log.e(tag,returnAndLogError(transfer));
+                            }
+                        } catch (Exception ex) {
+                            String message = "Cannot receive the file because an error occured during the process."
+                                    + ex;
+                            Log.e(tag, message, ex);
+                            Log.i(tag,message);
+                        }
+                    };
+                }.start();
+            }
+        });
+
+
+    }
+
+    public String returnAndLogError(FileTransfer transfer) {
+        String message = "Cannot process the file because an error occured during the process.";
+
+        if (transfer.getError() != null) {
+            message += transfer.getError();
+        }
+        if (transfer.getException() != null) {
+            message += transfer.getException();
+        }
+        return message;
+    }
 
     public void sendFile(File mfile, String userID) throws XMPPException {
-        
-    	String fileDescription="this is test file";
-        
-    	ProviderManager.getInstance().addIQProvider("query","http://jabber.org/protocol/bytestreams", new BytestreamsProvider());
-    	ProviderManager.getInstance().addIQProvider("query","http://jabber.org/protocol/disco#items", new DiscoverItemsProvider());
-    	ProviderManager.getInstance().addIQProvider("query","http://jabber.org/protocol/disco#info", new DiscoverInfoProvider());
-	    ProviderManager.getInstance().addIQProvider("si","http://jabber.org/protocol/si", new StreamInitiationProvider());
+
+        String fileDescription="this is test file";
+
+        ProviderManager.getInstance().addIQProvider("query","http://jabber.org/protocol/bytestreams", new BytestreamsProvider());
+        ProviderManager.getInstance().addIQProvider("query","http://jabber.org/protocol/disco#items", new DiscoverItemsProvider());
+        ProviderManager.getInstance().addIQProvider("query","http://jabber.org/protocol/disco#info", new DiscoverInfoProvider());
+        ProviderManager.getInstance().addIQProvider("si","http://jabber.org/protocol/si", new StreamInitiationProvider());
         ProviderManager.getInstance().addIQProvider("open","http://jabber.org/protocol/ibb", new OpenIQProvider());
         ProviderManager.getInstance().addIQProvider("data","http://jabber.org/protocol/ibb", new DataPacketProvider());
         ProviderManager.getInstance().addIQProvider("close","http://jabber.org/protocol/ibb", new CloseIQProvider());
-       
+
         ServiceDiscoveryManager sdm = ServiceDiscoveryManager.getInstanceFor(connection);
         if (sdm == null)
-        sdm = new ServiceDiscoveryManager(connection);
-    	
+            sdm = new ServiceDiscoveryManager(connection);
+
         FileTransferManager manager = new FileTransferManager(connection);
-    	FileTransferNegotiator.setServiceEnabled(connection, true);
-    	OutgoingFileTransfer transfer = manager.createOutgoingFileTransfer(userID);
-    	File file = mfile;
-    	try {
-    	   transfer.sendFile(file, fileDescription);
-    	} catch (XMPPException e) {
-    	   e.printStackTrace();
-    	}
-    	while(!transfer.isDone()) {
-    	   if(transfer.getStatus().equals(Status.error)) {
-    	      Log.e(tag,"ERROR!!! " + transfer.getError());
-    	   } else if (transfer.getStatus().equals(Status.cancelled) || transfer.getStatus().equals(Status.refused)) {
-    		   Log.e(tag,"Cancelled!!! " + transfer.getError());
-    	   }
-    	   try {
-    	      Thread.sleep(1000L);
-    	   } catch (InterruptedException e) {
-    	      e.printStackTrace();
-    	   }
-    	}
-    	if(transfer.getStatus().equals(Status.refused) || transfer.getStatus().equals(Status.error)
-    	 || transfer.getStatus().equals(Status.cancelled)){
-    		Log.e(tag,"refused cancelled error " + transfer.getError());
-    	} else {
-    		Log.i(tag,"file sent successfuly");
-    	}
-    	
+        FileTransferNegotiator.setServiceEnabled(connection, true);
+        OutgoingFileTransfer transfer = manager.createOutgoingFileTransfer(userID);
+        File file = mfile;
+        try {
+            transfer.sendFile(file, fileDescription);
+        } catch (XMPPException e) {
+            e.printStackTrace();
+        }
+        while(!transfer.isDone()) {
+            if(transfer.getStatus().equals(Status.error)) {
+                Log.e(tag,"ERROR!!! " + transfer.getError());
+            } else if (transfer.getStatus().equals(Status.cancelled) || transfer.getStatus().equals(Status.refused)) {
+                Log.e(tag,"Cancelled!!! " + transfer.getError());
+            }
+            try {
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        if(transfer.getStatus().equals(Status.refused) || transfer.getStatus().equals(Status.error)
+                || transfer.getStatus().equals(Status.cancelled)){
+            Log.e(tag,"refused cancelled error " + transfer.getError());
+        } else {
+            Log.i(tag,"file sent successfuly");
+        }
+
     	/*
-    	 * <error code="503" type="cancel"><service-unavailable xmlns="urn:ietf:params:xml:ns:xmpp-stanzas"/></error>  
-    	 *  Solution: Pass full jabber id:username@domain/resource. In my case i have changed 
-    	 *  
+    	 * <error code="503" type="cancel"><service-unavailable xmlns="urn:ietf:params:xml:ns:xmpp-stanzas"/></error>
+    	 *  Solution: Pass full jabber id:username@domain/resource. In my case i have changed
+    	 *
     	 *  http://stackoverflow.com/questions/12153795/file-transfer-using-xmpp-extension-xep-0065
     	 */
-    	
+
     }
-    
-	public void sendFile2(String friendId , String userId , File f) {
-		
-		   Log.d(tag, "sendFile2 called ...");
-		    ProviderManager.getInstance().addIQProvider("si","http://jabber.org/protocol/si", new StreamInitiationProvider());
-	        ProviderManager.getInstance().addIQProvider("query","http://jabber.org/protocol/bytestreams", new BytestreamsProvider());
-	        ProviderManager.getInstance().addIQProvider("open","http://jabber.org/protocol/ibb", new OpenIQProvider());
-	        ProviderManager.getInstance().addIQProvider("data","http://jabber.org/protocol/ibb", new DataPacketProvider());
-	        ProviderManager.getInstance().addIQProvider("close","http://jabber.org/protocol/ibb", new CloseIQProvider());
-	        ProviderManager.getInstance().addExtensionProvider("data","http://jabber.org/protocol/ibb", new DataPacketProvider());
-		 
-	      ServiceDiscoveryManager sdm = ServiceDiscoveryManager.getInstanceFor(connection);
-            if (sdm == null)
+
+    public void sendFile2(String friendId , String userId , File f) {
+
+        Log.d(tag, "sendFile2 called ...");
+        ProviderManager.getInstance().addIQProvider("si","http://jabber.org/protocol/si", new StreamInitiationProvider());
+        ProviderManager.getInstance().addIQProvider("query","http://jabber.org/protocol/bytestreams", new BytestreamsProvider());
+        ProviderManager.getInstance().addIQProvider("open","http://jabber.org/protocol/ibb", new OpenIQProvider());
+        ProviderManager.getInstance().addIQProvider("data","http://jabber.org/protocol/ibb", new DataPacketProvider());
+        ProviderManager.getInstance().addIQProvider("close","http://jabber.org/protocol/ibb", new CloseIQProvider());
+        ProviderManager.getInstance().addExtensionProvider("data","http://jabber.org/protocol/ibb", new DataPacketProvider());
+
+        ServiceDiscoveryManager sdm = ServiceDiscoveryManager.getInstanceFor(connection);
+        if (sdm == null)
             sdm = new ServiceDiscoveryManager(connection);
- 
-		FileTransferManager manager = new FileTransferManager(connection);
-		FileTransferNegotiator.setServiceEnabled(connection, true);
-		OutgoingFileTransfer transfer = manager.createOutgoingFileTransfer(friendId); 
+
+        FileTransferManager manager = new FileTransferManager(connection);
+        FileTransferNegotiator.setServiceEnabled(connection, true);
+        OutgoingFileTransfer transfer = manager.createOutgoingFileTransfer(friendId);
         Log.d(tag, "sending file ...");
-		//File file = new File("the-file-name.txt");
-		File file = f;
-		if (file.exists()) {
-			Log.i(tag,"File Exist");
-		} else {
-			Log.e(tag,"File Not Exist");
-			return;
-		}
-		
+        //File file = new File("the-file-name.txt");
+        File file = f;
+        if (file.exists()) {
+            Log.i(tag,"File Exist");
+        } else {
+            Log.e(tag,"File Not Exist");
+            return;
+        }
+
 //		long length = file.length();
 
-		try {
-			transfer.sendFile(file, userId);
-		} catch (XMPPException e) {
-			e.printStackTrace();
-		}
-		
-		while (!transfer.isDone()) {
-			if (transfer.getStatus().equals(Status.error)) {
-				Log.e(tag,"ERROR!!! " + transfer.getError());
-			} else if (transfer.getStatus().equals(Status.cancelled)
-					|| transfer.getStatus().equals(Status.refused)) {
-				Log.e(tag,"Cancelled!!! " + transfer.getError());
-			}
-			try {
-				Thread.sleep(2000L);
+        try {
+            transfer.sendFile(file, userId);
+        } catch (XMPPException e) {
+            e.printStackTrace();
+        }
 
-				Log.i(tag,"transfer file " + "sending file status :- "
-						+ transfer.getStatus() + " " + "progress:-"
-						+ transfer.getProgress());
+        while (!transfer.isDone()) {
+            if (transfer.getStatus().equals(Status.error)) {
+                Log.e(tag,"ERROR!!! " + transfer.getError());
+            } else if (transfer.getStatus().equals(Status.cancelled)
+                    || transfer.getStatus().equals(Status.refused)) {
+                Log.e(tag,"Cancelled!!! " + transfer.getError());
+            }
+            try {
+                Thread.sleep(2000L);
 
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		if (transfer.getStatus().equals(Status.refused)
-				|| transfer.getStatus().equals(Status.error)
-				|| transfer.getStatus().equals(Status.cancelled)) {
-			Log.e(tag,"refused cancelled error " + transfer.getError());
-		} else {
-			Log.d(tag,"Success");
-		}
-	}
-	
-	public void setSubscription(){
-		
-		//Roster roster = connection.getRoster();
-        //roster.setSubscriptionMode(Roster.SubscriptionMode.manual);
-        //roster.addRosterListener(new RosterListenerImpl());
-       // PacketFilter subscribeFilter = new SubscribeFilter();
-        //PacketListener subscribePacketListener = new SubscribePacketListener();
-        //connection.addPacketListener(subscribePacketListener, subscribeFilter);
-	}
+                Log.i(tag,"transfer file " + "sending file status :- "
+                        + transfer.getStatus() + " " + "progress:-"
+                        + transfer.getProgress());
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        if (transfer.getStatus().equals(Status.refused)
+                || transfer.getStatus().equals(Status.error)
+                || transfer.getStatus().equals(Status.cancelled)) {
+            Log.e(tag,"refused cancelled error " + transfer.getError());
+        } else {
+            Log.d(tag,"Success");
+        }
+    }
 
 
     public boolean isValidUserID(String userID) {
@@ -1605,17 +1664,14 @@ public class XmppManager implements GenericConnection {
         // TODO Auto-generated method stub
         return false;
     }
-    
-    public boolean isConnected(){
-    	
-    	return connection != null && connection.isConnected();
-    }
-    
+
+
+
     public void configure(ProviderManager pm) {
-	 
-    	pm.addIQProvider("vCard", "vcard-temp", new org.jivesoftware.smackx.provider.VCardProvider());
-       
-    	//  Private Data Storage
+
+        pm.addIQProvider("vCard", "vcard-temp", new VCardProvider());
+
+        //  Private Data Storage
         pm.addIQProvider("query","jabber:iq:private", new PrivateDataManager.PrivateDataIQProvider());
 
         //  Time
@@ -1629,25 +1685,25 @@ public class XmppManager implements GenericConnection {
         pm.addExtensionProvider("x","jabber:x:roster", new RosterExchangeProvider());
         //  Message Events
         pm.addExtensionProvider("x","jabber:x:event", new MessageEventProvider());
-        
+
         //  Chat State
         pm.addExtensionProvider("active","http://jabber.org/protocol/chatstates", new ChatStateExtension.Provider());
         pm.addExtensionProvider("composing","http://jabber.org/protocol/chatstates", new ChatStateExtension.Provider());
         pm.addExtensionProvider("paused","http://jabber.org/protocol/chatstates", new ChatStateExtension.Provider());
         pm.addExtensionProvider("inactive","http://jabber.org/protocol/chatstates", new ChatStateExtension.Provider());
         pm.addExtensionProvider("gone","http://jabber.org/protocol/chatstates", new ChatStateExtension.Provider());
-        
+
         //  XHTML
         pm.addExtensionProvider("html","http://jabber.org/protocol/xhtml-im", new XHTMLExtensionProvider());
-        
+
         //  Group Chat Invitations
         pm.addExtensionProvider("x","jabber:x:conference", new GroupChatInvitation.Provider());
 
         //  Service Discovery # Items    
-      //  pm.addIQProvider("query","http://jabber.org/protocol/disco#items", new DiscoverItemsProvider());
+        //  pm.addIQProvider("query","http://jabber.org/protocol/disco#items", new DiscoverItemsProvider());
 
         //  Service Discovery # Info
-      //  pm.addIQProvider("query","http://jabber.org/protocol/disco#info", new DiscoverInfoProvider());
+        //  pm.addIQProvider("query","http://jabber.org/protocol/disco#info", new DiscoverInfoProvider());
 
         //  Data Forms
         pm.addExtensionProvider("x","jabber:x:data", new DataFormProvider());
@@ -1662,7 +1718,7 @@ public class XmppManager implements GenericConnection {
         pm.addIQProvider("query","http://jabber.org/protocol/muc#owner", new MUCOwnerProvider());
 
         //  Delayed Delivery
-       // pm.addExtensionProvider("x","jabber:x:delay", new DelayInformationProvider());
+        // pm.addExtensionProvider("x","jabber:x:delay", new DelayInformationProvider());
 
         //  Version
         try {
@@ -1673,19 +1729,19 @@ public class XmppManager implements GenericConnection {
 
         //  VCard
         pm.addIQProvider("vCard","vcard-temp", new VCardProvider());
- 
+
         //  Offline Message Requests
         pm.addIQProvider("offline","http://jabber.org/protocol/offline", new OfflineMessageRequest.Provider());
-       
+
         //  Offline Message Indicator
         pm.addExtensionProvider("offline","http://jabber.org/protocol/offline", new OfflineMessageInfo.Provider());
-        
+
         //  Last Activity
         pm.addIQProvider("query","jabber:iq:last", new LastActivity.Provider());
 
         //  User Search
         pm.addIQProvider("query","jabber:iq:search", new UserSearch.Provider());
- 
+
         //  SharedGroupsInfo
         pm.addIQProvider("sharedgroup","http://www.jivesoftware.org/protocol/sharedgroup", new SharedGroupsInfo.Provider());
 
@@ -1694,20 +1750,20 @@ public class XmppManager implements GenericConnection {
 
         //   FileTransfer
         //pm.addIQProvider("open","http://jabber.org/protocol/ibb", new IBBProviders.Open());
-       // pm.addIQProvider("close","http://jabber.org/protocol/ibb", new IBBProviders.Close());
-      //  pm.addExtensionProvider("data","http://jabber.org/protocol/ibb", new IBBProviders.Data());
-        
-     // //File transfer
+        // pm.addIQProvider("close","http://jabber.org/protocol/ibb", new IBBProviders.Close());
+        //  pm.addExtensionProvider("data","http://jabber.org/protocol/ibb", new IBBProviders.Data());
+
+        // //File transfer
         pm.addIQProvider("si", "http://jabber.org/protocol/si",new StreamInitiationProvider());
         pm.addIQProvider("query", "http://jabber.org/protocol/bytestreams",new BytestreamsProvider());
         pm.addIQProvider("open", "http://jabber.org/protocol/ibb",new OpenIQProvider());
         pm.addIQProvider("close", "http://jabber.org/protocol/ibb",new CloseIQProvider());
         pm.addExtensionProvider("data", "http://jabber.org/protocol/ibb",new DataPacketProvider());
-        
-       	ProviderManager.getInstance().addIQProvider("query","http://jabber.org/protocol/bytestreams", new BytestreamsProvider());
-    	ProviderManager.getInstance().addIQProvider("query","http://jabber.org/protocol/disco#items", new DiscoverItemsProvider());
-    	ProviderManager.getInstance().addIQProvider("query","http://jabber.org/protocol/disco#info", new DiscoverInfoProvider());
-    	
+
+        ProviderManager.getInstance().addIQProvider("query","http://jabber.org/protocol/bytestreams", new BytestreamsProvider());
+        ProviderManager.getInstance().addIQProvider("query","http://jabber.org/protocol/disco#items", new DiscoverItemsProvider());
+        ProviderManager.getInstance().addIQProvider("query","http://jabber.org/protocol/disco#info", new DiscoverInfoProvider());
+
         //  Privacy
         pm.addIQProvider("query","jabber:iq:privacy", new PrivacyProvider());
         pm.addIQProvider("command", "http://jabber.org/protocol/commands", new AdHocCommandDataProvider());
@@ -1716,12 +1772,12 @@ public class XmppManager implements GenericConnection {
         pm.addExtensionProvider("bad-payload", "http://jabber.org/protocol/commands", new AdHocCommandDataProvider.BadPayloadError());
         pm.addExtensionProvider("bad-sessionid", "http://jabber.org/protocol/commands", new AdHocCommandDataProvider.BadSessionIDError());
         pm.addExtensionProvider("session-expired", "http://jabber.org/protocol/commands", new AdHocCommandDataProvider.SessionExpiredError());
-    
+
     }
-    
+
     public void configureProviderManager(XMPPConnection connection) {
 
-		  ProviderManager.getInstance().addIQProvider("notification","chatAPP:iq:notification",new NotificationIQProvider());
+        ProviderManager.getInstance().addIQProvider("notification","chatAPP:iq:notification",new NotificationIQProvider());
 
         ProviderManager.getInstance().addIQProvider("query","http://jabber.org/protocol/bytestreams", new BytestreamsProvider());
         ProviderManager.getInstance().addIQProvider("query","http://jabber.org/protocol/disco#items", new DiscoverItemsProvider());
@@ -1746,7 +1802,7 @@ public class XmppManager implements GenericConnection {
         //sdm.addFeature("jabber:iq:privacy");
 
         //Search 
-    	ProviderManager.getInstance().addIQProvider("query","jabber:iq:search", new UserSearch.Provider());
+        ProviderManager.getInstance().addIQProvider("query","jabber:iq:search", new UserSearch.Provider());
 
         // The order is the same as in the smack.providers file
 
@@ -1754,7 +1810,7 @@ public class XmppManager implements GenericConnection {
         ProviderManager.getInstance().addIQProvider("query","jabber:iq:private", new PrivateDataManager.PrivateDataIQProvider());
         //  Time
         try {
-        	ProviderManager.getInstance().addIQProvider("query","jabber:iq:time", Class.forName("org.jivesoftware.smackx.packet.Time"));
+            ProviderManager.getInstance().addIQProvider("query","jabber:iq:time", Class.forName("org.jivesoftware.smackx.packet.Time"));
         } catch (ClassNotFoundException e) {
             System.err.println("Can't load class for org.jivesoftware.smackx.packet.Time");
         }
@@ -1792,7 +1848,7 @@ public class XmppManager implements GenericConnection {
         ProviderManager.getInstance().addExtensionProvider("delay", "urn:xmpp:delay", new DelayInformationProvider());
         //  Version
         try {
-        	ProviderManager.getInstance().addIQProvider("query","jabber:iq:version", Class.forName("org.jivesoftware.smackx.packet.Version"));
+            ProviderManager.getInstance().addIQProvider("query","jabber:iq:version", Class.forName("org.jivesoftware.smackx.packet.Version"));
         } catch (ClassNotFoundException e) {
             System.err.println("Can't load class for org.jivesoftware.smackx.packet.Version");
         }
@@ -1819,7 +1875,7 @@ public class XmppManager implements GenericConnection {
         ProviderManager.getInstance().addIQProvider("data","http://jabber.org/protocol/ibb", new DataPacketProvider());
         ProviderManager.getInstance().addIQProvider("close","http://jabber.org/protocol/ibb", new CloseIQProvider());
         ProviderManager.getInstance().addExtensionProvider("data","http://jabber.org/protocol/ibb", new DataPacketProvider());
-        
+
         //  Privacy
         ProviderManager.getInstance().addIQProvider("query","jabber:iq:privacy", new PrivacyProvider());
 

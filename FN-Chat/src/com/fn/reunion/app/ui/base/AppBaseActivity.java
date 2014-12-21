@@ -125,7 +125,7 @@ import de.keyboardsurfer.android.widget.crouton.Configuration;
     private void initXMPP() {
  	      
         //Start the service
-    	if (!XmppStatus.isServiceManager(getBaseContext())) {
+    	if (!XmppStatus.isServiceManagerRunning(getBaseContext())) {
     		  ServiceManager serviceManager = new ServiceManager(AppBaseActivity.this);
     	      serviceManager.setNotificationIcon(R.drawable.app_launcher);
     	      serviceManager.startService();
@@ -137,7 +137,7 @@ import de.keyboardsurfer.android.widget.crouton.Configuration;
 
         try {
         	connection = XMPPLogic.getInstance().getConnection();
-            connection.addConnectionListener(new MConnectionListener(getBaseContext()));
+            //connection.addConnectionListener(new MConnectionListener(getBaseContext()));
             if (connection.isConnected()) {
          	   FriendsRoster.getInstance();
      	   }else{
