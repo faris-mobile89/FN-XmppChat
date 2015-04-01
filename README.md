@@ -19,7 +19,7 @@ An XMPP Client
 
 <h1>License</h1>
 
-BButton is released under an <a href="http://opensource.org/licenses/MIT">MIT License</a>. See LICENSE for details.
+XMPP-Chat is released under an <a href="http://opensource.org/licenses/MIT">MIT License</a>. See LICENSE for details.
 
 Copyright © 2014, Faris Abu Saleem. All rights reserved.
 
