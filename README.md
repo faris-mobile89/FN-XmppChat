@@ -12,7 +12,7 @@ An Android Chat Application Created By <a href ="http://goo.gl/eaohSg">Faris Abu
 <li>Focused on real-time multi-user chatting</li>
 <li>Easy to configure, easy to run, easy to use</li>
 <li>Highly customizable</li>
-<li>Sending and receiving images,videos,voice</li>
+<li>Sending and receiving images, videos and voice</li>
 <li>Intuitive UI that follows Android Design guidelines</li>
 <li>Built for Jabber (XMPP), using famous technologies</li>
 <li>Used and approved in a productive environment with up to 400 concurrent users</li>
