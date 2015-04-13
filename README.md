@@ -23,6 +23,7 @@ An Android Chat Application Created By <a href ="http://goo.gl/eaohSg">Faris Abu
 </span></a>Screenshot
 </h2>
 
+
 <div align="left">
      <img width="40%"  src="snapshots/device-2014-12-16-085212.png" alt="About screen" title="About screen"</img>
      <img width="40%"  src="snapshots/device-2014-12-15-1751371.png" alt="About screen" title="About screen"</img>
@@ -41,5 +42,5 @@ An Android Chat Application Created By <a href ="http://goo.gl/eaohSg">Faris Abu
 
 XMPP-Chat is released under an <a href="http://opensource.org/licenses/MIT">MIT License</a>. See LICENSE for details.
 
-Copyright © 2014, Faris Abu Saleem. All rights reserved.
+Copyright © 2015, Faris Abu Saleem. All rights reserved.
 
